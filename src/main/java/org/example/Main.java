@@ -11,13 +11,15 @@ import javafx.geometry.Pos;
 import javafx.geometry.Insets;
 import javafx.stage.Stage;
 
+import java.net.URL;
+
 public class Main extends Application{
 
     @Override
     public void start(Stage stage){
                                                                         //Title Label
         Label title = new Label("Welcome to the DMRC Machine");
-        title.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #D32F2F");
+        title.getStyleClass().add("title");
 
                                                                         //Title container with white background color
         HBox titleBar = new HBox(title);
@@ -39,12 +41,11 @@ public class Main extends Application{
         exitbtn.setMinWidth(btnWidth);
 
                                                                         //Style Buttons
-        String mainBtnStyle = "-fx-background-color: #1565C0; -fx-text-fill: white; -fx-font-size: 16px;";
-        String exitStyle = "-fx-background-color: #B71C1C; -fx-text-fill: white; -fx-font-size: 16px;";
-        bookTicketbtn.setStyle(mainBtnStyle);
-        rechargeCardbtn.setStyle(mainBtnStyle);
-        historybtn.setStyle(mainBtnStyle);
-        exitbtn.setStyle(exitStyle);
+
+        bookTicketbtn.getStyleClass().add("button");
+        rechargeCardbtn.getStyleClass().add("button");
+        historybtn.getStyleClass().add("button");
+        exitbtn.getStyleClass().addAll("button", "exit");
 
                                                                         //Buttons Action Placeholder
         bookTicketbtn.setOnAction(e -> System.out.println("Book Ticket Clicked"));
@@ -75,10 +76,18 @@ public class Main extends Application{
         BorderPane root = new BorderPane();
         root.setTop(titleBar);
         root.setCenter(buttonLayout);
-        root.setStyle("-fx-background-color: #E3F2FD;");
+        root.setStyle("-fx-background-color: #F1F8FF;");
 
                                                                         //Scene and Stage
         Scene scene = new Scene(root, 700, 400);
+
+        URL cssURL = getClass().getResource("/style.css");        // Add leading slash to look in 'resources' root
+        if (cssURL != null) {
+            scene.getStylesheets().add(cssURL.toExternalForm());
+        } else {
+            System.err.println("style.css not found!");
+        }
+
         stage.setTitle("DMRC Ticket Machine");
         stage.setScene(scene);
         stage.show();
