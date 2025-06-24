@@ -1,6 +1,12 @@
 package org.example;
 
+import javafx.animation.Animation;
 import javafx.application.Application;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -17,6 +23,18 @@ public class Main extends Application{
 
     @Override
     public void start(Stage stage){
+                                                                        //Clock
+        Label clockLabel = new Label();
+        clockLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #555555; -fx-padding: 10px;");
+        updateClock(clockLabel);
+        clockLabel.setId("clock-label");
+
+                                                                        //Live update every second
+        Timeline clockTimeline = new Timeline(new KeyFrame(Duration.seconds(1),
+                e -> updateClock(clockLabel)));
+        clockTimeline.setCycleCount(Animation.INDEFINITE);
+        clockTimeline.play();
+
                                                                         //Title Label
         Label title = new Label("Welcome to the DMRC Machine");
         title.getStyleClass().add("title");
@@ -26,6 +44,13 @@ public class Main extends Application{
         titleBar.setAlignment(Pos.CENTER);
         titleBar.setPadding(new Insets(20));
         titleBar.setStyle("-fx-background-color: yellow;");
+
+                                                                        //Clock Container
+        HBox clockContainer = new HBox(clockLabel);
+        clockContainer.setAlignment(Pos.CENTER);
+        clockContainer.setStyle("-fx-background-color: #ffffff; -fx-border-color: #cccccc; " +
+                "-fx-border-width: 1px 0 0 0;");
+        clockContainer.setPadding(new Insets(10));
 
                                                                         //Buttons
         Button bookTicketbtn = new Button("Book Ticket");
@@ -77,6 +102,7 @@ public class Main extends Application{
         root.setTop(titleBar);
         root.setCenter(buttonLayout);
         root.setStyle("-fx-background-color: #F1F8FF;");
+        root.setBottom(clockContainer);
 
                                                                         //Scene and Stage
         Scene scene = new Scene(root, 700, 400);
@@ -91,6 +117,12 @@ public class Main extends Application{
         stage.setTitle("DMRC Ticket Machine");
         stage.setScene(scene);
         stage.show();
+    }
+
+    private void updateClock(Label clockLabel){
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy | hh:mm:ss a");
+        clockLabel.setText("  " + now.format(formatter));
     }
 
     public static void main(String[] args) {

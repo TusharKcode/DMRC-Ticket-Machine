@@ -20,6 +20,15 @@
     -fx-font-family: 'Segoe UI', sans-serif;
 }
 
+#clock-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
+    -fx-padding: 5px 15px;
+    -fx-background-radius: 10px;
+}
+
+
 .root {
     -fx-background-color: #F1F8FF;
 }
