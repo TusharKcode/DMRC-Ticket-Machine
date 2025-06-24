@@ -1,8 +1,8 @@
-# 🛤️ DMRC Ticket Machine Clone
+# DMRC Ticket Machine Clone
 
 A JavaFX-based metro ticket machine simulator inspired by Delhi Metro's DMRC kiosks.
 
-This is a JavaFX-based desktop application simulating the functionality of a **DMRC Metro Station Ticket Machine**. 
+This is a JavaFX-based desktop application simulating the functionality of a **DMRC Metro Station Ticket Machine**.  
 The app provides a graphical user interface for users to:
 - Book QR-based metro tickets
 - Metro Card Recharge
@@ -12,27 +12,32 @@ The app provides a graphical user interface for users to:
 
 ---
 
-## 🚀 Tech Stack
-### 💻 Technologies Used:
+### Technologies Used:
 - Java 17 (Temurin JDK)
 - JavaFX 21
 - IntelliJ IDEA (Build System: IntelliJ / Gradle)
 - Gradle for dependency management
-- Gradle Build Tool
 - (Optional) ZXing for QR Generation
 - (Optional) SQLite for Data Storage
 
 ---
-## 🏗️ Folder Structure
+
+## Folder Structure
 src/
-└── main/
-└── java/
-└── org/
-└── dmrc/
-└── Main.java <-- Welcome screen UI
+├── main/
+│ ├── java/
+│ │ └── org/
+│ │ └── dmrc/
+│ │ └── Main.java <-- Welcome screen UI
+│
+├── resources/
+│ ├── style.css <-- Custom styling for modern look
+│ └── config.properties <-- Station name & terminal ID config
+
+
 ---
 
-## 🛠️ How to Run
+## How to Run
 
 1. Clone the repo
 2. Open in IntelliJ
@@ -41,9 +46,11 @@ src/
 
 ---
 
-## 🔄 Planned Features
+## Planned Features
 
 - [x] Welcome Screen UI
+- [x] Modern UI Styling using CSS
+- [x] Dynamic Station Name & Terminal ID using `config.properties`
 - [ ] Station selection & fare calculator
 - [ ] Ticket generation with QR
 - [ ] Card recharge simulation
@@ -51,19 +58,24 @@ src/
 
 ---
 
-### 🎯 Features Completed:
+## Features Completed:
 - JavaFX Project setup with Gradle & JDK 17
-- Clean GUI window with:
-    - DMRC welcome message
-    - Top-aligned header bar with red title on white background
-    - Four uniform buttons arranged in a 2x2 layout:
+- Welcome UI includes:
+    - **Station name & Terminal ID** fetched dynamically from `config.properties`
+    - Real-time clock displayed at the bottom
+    - Top header with:
+        - DMRC Welcome message (left)
+        - Station info (right)
+    - Four modern buttons in 2x2 layout:
         - Book Ticket
         - Recharge Card
         - View History
         - Exit
+    - Fully styled using `style.css`
+
 ---
 
-## 🔜 Next Steps:
+## Next Steps:
 - Implement **Book Ticket screen** with:
     - Source & destination dropdown
     - Fare calculation
@@ -73,11 +85,13 @@ src/
     - Recharge functionality
     - View travel history
 
-- Improve design with icons, CSS styling, and branding
+- Enhance UI with:
+    - Icons
+    - Animated transitions
+    - Custom styling themes
 
 ---
 
-## 👨‍💻 Author
-
+## Author
 **Tushar**  
 MCA Student | Aspiring Full Stack Developer | Open to Learn 🚀
