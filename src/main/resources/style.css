@@ -1,3 +1,12 @@
+.root{
+    -fx-background-color: linear-gradient(to bottom, #E3F2FD, #ffffff);
+}
+
+.title-bar{
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0.2, 0,2);
+}
+
 .button {
     -fx-background-color: #1976D2;
     -fx-text-fill: white;
@@ -9,8 +18,23 @@
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 4, 0, 2, 2);
 }
 
+.button:hover{
+    -fx-background-color: #0D47A1;
+}
+
 .button.exit {
     -fx-background-color: #C62828;
+}
+
+.button.exit:hover {
+    -fx-background-color: #7f0000;
+}
+
+#subway{
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 4, 0.5, 2, 2);
+    -fx-padding: 5px;
+    -fx-background-color: white;
+    -fx-border-radius: 5px;
 }
 
 .label.title {
@@ -27,6 +51,12 @@
     -fx-padding: 5px 15px;
     -fx-background-radius: 10px;
 }
+
+.region {
+    -fx-border-radius: 50%;
+    -fx-background-radius: 50%;
+}
+
 
 
 .root {
