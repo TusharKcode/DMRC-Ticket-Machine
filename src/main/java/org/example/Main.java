@@ -29,11 +29,11 @@ public class Main extends Application{
     @Override
     public void start(Stage stage){
 
-        //Title Label (left-side)
+                                                                        //Title Label (left-side)
         Label title = new Label("Welcome to the DMRC Machine");
         title.getStyleClass().add("title");
 
-        //Station and Terminal ID (right-side)
+                                                                //Station and Terminal ID (right-side)
         Properties props = new Properties();
         try(InputStream input = getClass().getResourceAsStream("/config.properties")){
             if(input != null){
@@ -55,7 +55,7 @@ public class Main extends Application{
         stationLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #444;");
         terminalLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #777;");
 
-        //Spacer (pushes right box to the right)
+                                                                //Spacer (pushes right box to the right)
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
@@ -86,7 +86,7 @@ public class Main extends Application{
                 "-fx-border-width: 1px 0 0 0;");
         clockContainer.setPadding(new Insets(10));
 
-        //Final top section
+                                                                        //Final top section
         VBox topLayout = new VBox(titleBar, clockContainer);
         topLayout.setStyle("-fx-background-color: white;");
 
@@ -113,25 +113,25 @@ public class Main extends Application{
         historybtn.setOnAction(e -> System.out.println("View History"));
         exitbtn.setOnAction(e -> stage.close());
 
-        //Create Button Rows
+                                                                        //Create Button Rows
         HBox row1 = new HBox(40, bookTicketbtn, rechargeCardbtn);
         row1.setAlignment(Pos.CENTER);
         HBox row2 = new HBox(40, historybtn, exitbtn);
         row2.setAlignment(Pos.CENTER);
 
-        //Combine Button rows
+                                                                        //Combine Button rows
         VBox buttonLayout = new VBox(50, row1, row2);
         buttonLayout.setAlignment(Pos.CENTER);
         buttonLayout.setPadding(new Insets(40, 0, 40, 0));
 
-        //Main Layout
+                                                                        //Main Layout
         BorderPane root = new BorderPane();
         root.setCenter(buttonLayout);
         root.setStyle("-fx-background-color: #F1F8FF;");
         root.setBottom(clockContainer);
         root.setTop(topLayout);
 
-        //Scene and Stage
+                                                                        //Scene and Stage
         Scene scene = new Scene(root, 700, 400);
 
         URL cssURL = getClass().getResource("/style.css");        // Add leading slash to look in 'resources' root
