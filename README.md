@@ -27,13 +27,12 @@ src/
 ├── main/
 │ ├── java/
 │ │ └── org/
-│ │ └── dmrc/
-│ │ └── Main.java <-- Welcome screen UI
+│ │     └── dmrc/
+│ │         └── Main.java <-- Welcome screen UI
 │
 ├── resources/
 │ ├── style.css <-- Custom styling for modern look
 │ └── config.properties <-- Station name & terminal ID config
-
 
 ---
 
@@ -72,6 +71,10 @@ src/
         - View History
         - Exit
     - Fully styled using `style.css`
+    - Ticker (News Bar) with bilingual messages (English & Hindi)
+    - Metro line animated illustration with current station highlight
+    - Multi-language support toggle (English/Hindi)
+    - Hidden Admin Panel access (Ctrl+Alt+A or corner button)
 
 ---
 
@@ -94,4 +97,4 @@ src/
 
 ## Author
 **Tushar**  
-MCA Student | Aspiring Full Stack Developer | Open to Learn 🚀
+MCA Student | Aspiring Full Stack Developer | Open to Learn
