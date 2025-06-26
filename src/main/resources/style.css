@@ -57,7 +57,24 @@
     -fx-background-radius: 50%;
 }
 
+#ticker-container{
+        -fx-background-color: #e8f5e9; /* light yellow */
+        -fx-padding: 5px 10px;
+        -fx-border-color: #43a047;
+        -fx-border-width: 1px 0 1px 0;
+        -fx-border-style: solid;
+        -fx-alignment: center-left;
+}
 
+#ticker-label{
+        -fx-font-size: 14px;
+        -fx-text-fill: #1b5e20;
+        -fx-font-weight: 600;
+        -fx-padding: 4px;
+        -fx-text-alignment: left;
+        -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.1) , 1, 1, 1, 1 );
+        -fx-font-family: "Courier New", monospace;
+}
 
 .root {
     -fx-background-color: #F1F8FF;

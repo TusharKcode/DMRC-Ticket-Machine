@@ -2,9 +2,12 @@ package org.example;
 
 import javafx.animation.*;
 import javafx.application.Application;
+import javafx.scene.control.PasswordField;
+import javafx.stage.Modality;
 import javafx.scene.control.*;
 import javafx.scene.image.*;
 import javafx.scene.layout.*;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import java.util.*;
 import java.io.*;
@@ -12,6 +15,8 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 import javafx.scene.*;
 import javafx.geometry.*;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import java.net.URL;
 
@@ -141,7 +146,7 @@ public class Main extends Application{
         buttonLayout.setAlignment(Pos.CENTER);
         buttonLayout.setPadding(new Insets(40, 0, 40, 0));
 
-        // Animation for button layout: slide-in from below + fade-in
+                                                        // Animation for button layout: slide-in from below + fade-in
         buttonLayout.setTranslateY(100);  // Start 100px below
         buttonLayout.setOpacity(0);       // Start invisible
 
@@ -158,8 +163,7 @@ public class Main extends Application{
 
         ParallelTransition intro = new ParallelTransition(slideIn, fadeButtons);
         intro.play();
-
-        //Animation title and logo fade-in
+                                                                     //Animation title and logo fade-in
         FadeTransition fadeLogo = new FadeTransition(Duration.seconds(1), logoView);
         fadeLogo.setFromValue(0);
         fadeLogo.setToValue(1);
@@ -172,6 +176,40 @@ public class Main extends Application{
 
         ParallelTransition fadeIntro = new ParallelTransition(fadeLogo, fadeTitle);
         fadeIntro.play();
+                                                                        //Ticker (Anouncement bar)
+        Label tickerLabel = new Label("Blue Line Delay | Card Recharge ₹10 Cashback Today | Happy Metro Week!" +
+                " | ब्लू लाइन में देरी | कार्ड रिचार्ज पर ₹10 कैशबैक आज | हैप्पी मेट्रो सप्ताह!");
+        tickerLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #222;");
+        tickerLabel.setMinWidth(Region.USE_PREF_SIZE);
+        tickerLabel.setId("ticker-label");
+
+        HBox tickerContainer = new HBox(tickerLabel);
+        tickerContainer.setStyle("-fx-background-color: #FFF9C4; -fx-padding: 5 10 5 10;");
+        tickerContainer.setAlignment(Pos.CENTER_LEFT);
+        tickerContainer.setPrefHeight(30);
+        tickerContainer.setId("ticker-container");
+                                                                            //Run animation AFTER layout pass (scene is ready)
+        tickerContainer.widthProperty().addListener((obs,
+                                                     oldVal, newVal) -> {
+            double containerWidth = newVal.doubleValue();
+            double labelWidth = tickerLabel.getWidth();
+                                                                            // Reset position for repeated animation
+            tickerLabel.setTranslateX(containerWidth);
+                                                                            // Set clipping to only show within ticker box
+            Rectangle clip = new Rectangle(containerWidth, 30);
+            clip.heightProperty().bind(tickerContainer.heightProperty());
+            clip.widthProperty().bind(tickerContainer.widthProperty());
+            tickerContainer.setClip(clip);
+                                                                            // Remove old animations if any
+            tickerLabel.getTransforms().clear();
+                                                                            //Animate text leftwards
+            TranslateTransition tickerScroll = new TranslateTransition(Duration.seconds(15), tickerLabel);
+            tickerScroll.setFromX(containerWidth);
+            tickerScroll.setToX(-labelWidth);
+            tickerScroll.setInterpolator(Interpolator.LINEAR);
+            tickerScroll.setCycleCount(Animation.INDEFINITE);
+            tickerScroll.play();
+        });
                                                                         //Metro Line Illustration
         String[] stations = {"Rajiv Chowk", "Central Secretariat", "Kashmere Gate", "Lajpat Nagar", "Huda City Centre"};
         HBox metroLine = new HBox(15);
@@ -203,16 +241,34 @@ public class Main extends Application{
         VBox animatedTrainBox = new VBox(metroIcon);
         animatedTrainBox.setAlignment(Pos.CENTER);
         metroLine.getChildren().add(2, animatedTrainBox);
-        VBox bottomSection = new VBox(clockContainer, metroLine);
+        VBox bottomSection = new VBox(tickerContainer, clockContainer, metroLine);
+        bottomSection.setSpacing(5);
+
                                                                         //Main Layout
         BorderPane root = new BorderPane();
         root.setCenter(buttonLayout);
         root.setStyle("-fx-background-color: #F1F8FF;");
         root.setTop(topLayout);
         root.setBottom(bottomSection);
-                                                                        //Scene and Stage
-        Scene scene = new Scene(root, 700, 400);
 
+                                                                        //Admin Part only
+        Button hiddenAdminBtn = new Button();
+        hiddenAdminBtn.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
+        hiddenAdminBtn.setPrefSize(20, 20);
+        hiddenAdminBtn.setOnAction(e -> openAdminLogin());
+
+        HBox hiddenCorner = new HBox(hiddenAdminBtn);
+        hiddenCorner.setAlignment(Pos.BOTTOM_RIGHT);
+        hiddenCorner.setPadding(new Insets(0,10,10,0));
+        hiddenCorner.setMouseTransparent(true);
+                                                                        //Scene and Stage
+        StackPane stack = new StackPane(root, hiddenCorner);
+        Scene scene = new Scene(stack, 700, 400);
+        scene.addEventFilter(KeyEvent.KEY_PRESSED, event ->{
+            if(event.isControlDown() && event.isAltDown() && event.getCode() == KeyCode.A){
+                openAdminLogin();
+            }
+        });
         URL cssURL = getClass().getResource("/style.css");        // Add leading slash to look in 'resources' root
         if (cssURL != null) {
             scene.getStylesheets().add(cssURL.toExternalForm());
@@ -227,6 +283,43 @@ public class Main extends Application{
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy | hh:mm:ss a");
         clockLabel.setText("  " + now.format(formatter));
+    }
+    private void openAdminLogin(){
+        System.out.println("Adin Panel Triggered");
+        Stage loginStage = new Stage();
+        loginStage.setTitle("Admin Login");
+
+        Label userLabel = new Label("Username: ");
+        TextField userNamefield = new TextField();
+        userNamefield.setPromptText("Enter Admin Username: ");
+
+        Label passLabel = new Label("Password: ");
+        PasswordField passwordfield = new PasswordField();
+        passwordfield.setPromptText("Enter Password: ");
+
+        Button loginBtn = new Button("Login");
+        Label statusLabel = new Label();
+
+        loginBtn.setOnAction(e -> {
+            String user = userNamefield.getText();
+            String pass = passwordfield.getText();
+
+            if(user.equals("admin") && pass.equals("dmrc123")){
+                statusLabel.setText("Access Granted...");
+                loginStage.close();
+                System.out.println("Opening Admin Panel....");
+            } else{
+                statusLabel.setText("Invalid Credentials...");
+            }
+        });
+        VBox loginLayout = new VBox(10, userLabel, userNamefield, passLabel, passwordfield, loginBtn, statusLabel);
+        loginLayout.setPadding(new Insets(20));
+        loginLayout.setAlignment(Pos.CENTER);
+
+        Scene loginScene = new Scene(loginLayout, 300, 250);
+        loginStage.setScene(loginScene);
+        loginStage.initModality(Modality.APPLICATION_MODAL); // Tie it to main window
+        loginStage.show();
     }
     public static void main(String[] args) {
         launch(args);
