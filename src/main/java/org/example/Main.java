@@ -1,30 +1,17 @@
 package org.example;
 
-import javafx.animation.Animation;
+import javafx.animation.*;
 import javafx.application.Application;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.scene.control.ComboBox;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.Priority;
+import javafx.scene.control.*;
+import javafx.scene.image.*;
+import javafx.scene.layout.*;
 import javafx.util.Duration;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Properties;
-import java.io.IOException;
-import java.io.InputStream;
-import java.time.LocalDateTime;
+import java.util.*;
+import java.io.*;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.layout.Region;
-import javafx.geometry.Pos;
-import javafx.geometry.Insets;
+import javafx.scene.*;
+import javafx.geometry.*;
 import javafx.stage.Stage;
 import java.net.URL;
 
@@ -114,7 +101,6 @@ public class Main extends Application{
                                                                         //Final top section
         VBox topLayout = new VBox(titleBar, clockContainer);
         topLayout.setStyle("-fx-background-color: white;");
-
                                                                         //Buttons
         Button bookTicketbtn = new Button("Book Ticket");
         Button rechargeCardbtn = new Button("Recharge Your Card");
@@ -140,7 +126,6 @@ public class Main extends Application{
         languageSelector.setOnAction(e -> {
             String lang = languageSelector.getValue();
             Map<String, String> labels = lang.equals("हिन्दी") ? hiLabels : enLabels;
-
             bookTicketbtn.setText(labels.get("book"));
             rechargeCardbtn.setText(labels.get("recharge"));
             historybtn.setText(labels.get("history"));
@@ -156,17 +141,46 @@ public class Main extends Application{
         buttonLayout.setAlignment(Pos.CENTER);
         buttonLayout.setPadding(new Insets(40, 0, 40, 0));
 
+        // Animation for button layout: slide-in from below + fade-in
+        buttonLayout.setTranslateY(100);  // Start 100px below
+        buttonLayout.setOpacity(0);       // Start invisible
+
+        TranslateTransition slideIn = new TranslateTransition(Duration.seconds(1), buttonLayout);
+        slideIn.setFromY(100);
+        slideIn.setToY(0);
+        slideIn.setDelay(Duration.millis(200));
+        slideIn.setInterpolator(Interpolator.EASE_BOTH);
+
+        FadeTransition fadeButtons = new FadeTransition(Duration.seconds(1), buttonLayout);
+        fadeButtons.setFromValue(0);
+        fadeButtons.setToValue(1);
+        fadeButtons.setDelay(Duration.millis(200));
+
+        ParallelTransition intro = new ParallelTransition(slideIn, fadeButtons);
+        intro.play();
+
+        //Animation title and logo fade-in
+        FadeTransition fadeLogo = new FadeTransition(Duration.seconds(1), logoView);
+        fadeLogo.setFromValue(0);
+        fadeLogo.setToValue(1);
+        fadeLogo.setDelay(Duration.millis(100));
+
+        FadeTransition fadeTitle = new FadeTransition(Duration.seconds(1), title);
+        fadeTitle.setFromValue(0);
+        fadeTitle.setToValue(1);
+        fadeTitle.setDelay(Duration.millis(300));
+
+        ParallelTransition fadeIntro = new ParallelTransition(fadeLogo, fadeTitle);
+        fadeIntro.play();
                                                                         //Metro Line Illustration
         String[] stations = {"Rajiv Chowk", "Central Secretariat", "Kashmere Gate", "Lajpat Nagar", "Huda City Centre"};
         HBox metroLine = new HBox(15);
         metroLine.setPadding(new Insets(20,20,20,20));
         metroLine.setAlignment(Pos.CENTER);
-
         Image metroImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/train.png")));
         ImageView metroIcon = new ImageView(metroImg);
         metroIcon.setFitHeight(30);
         metroIcon.setFitWidth(30);
-
         Timeline metroMove = new Timeline(
                 new KeyFrame(Duration.seconds(0), e -> metroIcon.setTranslateX(-300)),
                 new KeyFrame(Duration.seconds(5), e -> metroIcon.setTranslateX(300))
@@ -174,27 +188,21 @@ public class Main extends Application{
         metroMove.setCycleCount(Animation.INDEFINITE);
         metroMove.setAutoReverse(true);
         metroMove.play();
-
         for(String station : stations){
             VBox stationBox = new VBox(5);
             stationBox.setAlignment(Pos.CENTER);
-
             Region dot = new Region();
             dot.setStyle("-fx-background-color: " + (station.equals(stationName) ? "#D32F2F" : "#333333")
                     + "; -fx-border-radius: 50%; -fx-background-radius: 50%;");
             dot.setPrefSize(12,12);
-
             Label stationLbl = new Label(station);
             stationLbl.setStyle("-fx-font-size: 10px; -fx-text-fill: #444444;");
-
             stationBox.getChildren().addAll(dot, stationLbl);
             metroLine.getChildren().add(stationBox);
         }
-
         VBox animatedTrainBox = new VBox(metroIcon);
         animatedTrainBox.setAlignment(Pos.CENTER);
         metroLine.getChildren().add(2, animatedTrainBox);
-
         VBox bottomSection = new VBox(clockContainer, metroLine);
                                                                         //Main Layout
         BorderPane root = new BorderPane();
@@ -211,18 +219,15 @@ public class Main extends Application{
         } else {
             System.err.println("style.css not found!");
         }
-
         stage.setTitle("DMRC Ticket Machine");
         stage.setScene(scene);
         stage.show();
     }
-
     private void updateClock(Label clockLabel){
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy | hh:mm:ss a");
         clockLabel.setText("  " + now.format(formatter));
     }
-
     public static void main(String[] args) {
         launch(args);
     }
