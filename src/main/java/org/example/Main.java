@@ -9,6 +9,7 @@ import javafx.scene.image.*;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import java.lang.reflect.Array;
 import java.util.*;
 import java.io.*;
 import java.time.*;
@@ -28,7 +29,7 @@ public class Main extends Application{
         Image logoImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/subway.png")));
         ImageView logoView = new ImageView(logoImg);
         logoView.setPreserveRatio(true);
-        logoView.setFitHeight(40);
+        logoView.setFitHeight(24);
         logoView.setCache(true);
         logoView.setSmooth(true);
         logoView.setId("subway");
@@ -76,6 +77,49 @@ public class Main extends Application{
         rightBox.setAlignment(Pos.CENTER_RIGHT);
         stationLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #444;");
         terminalLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #777;");
+                                                                        //Quoting or Tip of the day
+        String[] metroTips = {
+                "Always stand behind the yellow line.",
+                "Keep your metro card ready while exiting.",
+                "Let passengers exit before boarding.",
+                "Travel smart, travel safe!",
+                "Follow platform announcements carefully.",
+                "Avoid talking loudly or blocking doors.",
+                "Queue up, don't rush during boarding.",
+                "Carry a valid token/card during travel.",
+                "Help senior citizens and people with disabilities.",
+        };
+        Random rand = new Random();
+        Label tipLabel = new Label("Tip of the Day: " + metroTips[0]);
+        tipLabel.setStyle("-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #444; -fx-padding: 10 0 10 0;");
+        tipLabel.setWrapText(true);
+        tipLabel.setMaxWidth(600);
+        tipLabel.setAlignment(Pos.CENTER);
+
+        HBox tipBox = new HBox(tipLabel);
+        tipBox.setAlignment(Pos.CENTER);
+        tipBox.setPadding(new Insets(8));
+        tipBox.setStyle("-fx-background-color: #E3F2FD; -fx-border-color: #1565C0; -fx-border-width: 0 0 2px 0;");
+
+                                                            //Tip timeline (changes every 5 seconds)
+        Timeline tipTimeline = new Timeline(new KeyFrame(Duration.seconds(5), e -> {
+            int idx = new Random().nextInt(metroTips.length);
+            FadeTransition fadeOut = new FadeTransition(Duration.millis(500), tipLabel);
+            fadeOut.setFromValue(1);
+            fadeOut.setToValue(0);
+            fadeOut.setOnFinished(ev -> {
+                tipLabel.setText(metroTips[idx]);
+                FadeTransition fadeIn = new FadeTransition(Duration.millis(500), tipLabel);
+                fadeIn.setFromValue(0);
+                fadeIn.setToValue(1);
+                fadeIn.play();
+            });
+            fadeOut.play();
+        }));
+        tipTimeline.setCycleCount(Animation.INDEFINITE);
+        tipTimeline.play();
+        VBox bottomSection = new VBox(tipBox);
+        bottomSection.setSpacing(5);
                                                                 //Spacer (pushes right box to the right)
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -122,8 +166,10 @@ public class Main extends Application{
         rechargeCardbtn.getStyleClass().add("button");
         historybtn.getStyleClass().add("button");
         exitbtn.getStyleClass().addAll("button", "exit");
+                                                                                    //Book Ticket
+        List<String> stationList = Arrays.asList("Dwarka", "Dwarka Mod", "Nawada", "Uttam Nagar East", "Uttam Nagar West",
+                "Janakpuri West","Janakpuri East", "Rajouri Garden", "Karol Bagh", "Rajiv Chowk");
                                                                         //Buttons Action Placeholder
-        bookTicketbtn.setOnAction(e -> System.out.println("Book Ticket Clicked"));
         rechargeCardbtn.setOnAction(e -> System.out.println("Recharge Card Clicked"));
         historybtn.setOnAction(e -> System.out.println("View History"));
         exitbtn.setOnAction(e -> stage.close());
@@ -210,47 +256,12 @@ public class Main extends Application{
             tickerScroll.setCycleCount(Animation.INDEFINITE);
             tickerScroll.play();
         });
-                                                                        //Metro Line Illustration
-        String[] stations = {"Rajiv Chowk", "Central Secretariat", "Kashmere Gate", "Lajpat Nagar", "Huda City Centre"};
-        HBox metroLine = new HBox(15);
-        metroLine.setPadding(new Insets(20,20,20,20));
-        metroLine.setAlignment(Pos.CENTER);
-        Image metroImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/train.png")));
-        ImageView metroIcon = new ImageView(metroImg);
-        metroIcon.setFitHeight(30);
-        metroIcon.setFitWidth(30);
-        Timeline metroMove = new Timeline(
-                new KeyFrame(Duration.seconds(0), e -> metroIcon.setTranslateX(-300)),
-                new KeyFrame(Duration.seconds(5), e -> metroIcon.setTranslateX(300))
-        );
-        metroMove.setCycleCount(Animation.INDEFINITE);
-        metroMove.setAutoReverse(true);
-        metroMove.play();
-        for(String station : stations){
-            VBox stationBox = new VBox(5);
-            stationBox.setAlignment(Pos.CENTER);
-            Region dot = new Region();
-            dot.setStyle("-fx-background-color: " + (station.equals(stationName) ? "#D32F2F" : "#333333")
-                    + "; -fx-border-radius: 50%; -fx-background-radius: 50%;");
-            dot.setPrefSize(12,12);
-            Label stationLbl = new Label(station);
-            stationLbl.setStyle("-fx-font-size: 10px; -fx-text-fill: #444444;");
-            stationBox.getChildren().addAll(dot, stationLbl);
-            metroLine.getChildren().add(stationBox);
-        }
-        VBox animatedTrainBox = new VBox(metroIcon);
-        animatedTrainBox.setAlignment(Pos.CENTER);
-        metroLine.getChildren().add(2, animatedTrainBox);
-        VBox bottomSection = new VBox(tickerContainer, clockContainer, metroLine);
-        bottomSection.setSpacing(5);
-
-                                                                        //Main Layout
+                                                                                //Main Layout
         BorderPane root = new BorderPane();
         root.setCenter(buttonLayout);
         root.setStyle("-fx-background-color: #F1F8FF;");
         root.setTop(topLayout);
-        root.setBottom(bottomSection);
-
+        root.setBottom(tipBox);
                                                                         //Admin Part only
         Button hiddenAdminBtn = new Button();
         hiddenAdminBtn.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
@@ -263,20 +274,52 @@ public class Main extends Application{
         hiddenCorner.setMouseTransparent(true);
                                                                         //Scene and Stage
         StackPane stack = new StackPane(root, hiddenCorner);
-        Scene scene = new Scene(stack, 700, 400);
-        scene.addEventFilter(KeyEvent.KEY_PRESSED, event ->{
+        Scene welcomeScene = new Scene(stack, 700, 400);
+
+        welcomeScene.addEventFilter(KeyEvent.KEY_PRESSED, event ->{
             if(event.isControlDown() && event.isAltDown() && event.getCode() == KeyCode.A){
                 openAdminLogin();
             }
         });
+        //-------------------------------------------------------------------------Book ticket button
+        bookTicketbtn.setOnAction(e -> {
+            VBox bookTicketLayout = new VBox(20);
+            bookTicketLayout.setAlignment(Pos.CENTER);
+            bookTicketLayout.setPadding(new Insets(20));
+
+            Label fromLabel = new Label("From: ");
+            ComboBox<String> fromComboBox = new ComboBox<>();
+            fromComboBox.getItems().addAll(stationList);
+            fromComboBox.setPromptText("From Station: ");
+
+            Label toLabel = new Label("To: ");
+            ComboBox<String> toComboBox = new ComboBox<>();
+            toComboBox.getItems().addAll(stationList);
+            toComboBox.setPromptText("To Station: ");
+
+            Button backBtn = new Button("Back");
+            backBtn.setOnAction(ev -> stage.setScene(welcomeScene));
+            HBox fromRow = new HBox(10, fromLabel, fromComboBox);
+            fromRow.setAlignment(Pos.CENTER);
+
+            HBox toRow = new HBox(10, toLabel, toComboBox);
+            toRow.setAlignment(Pos.CENTER);
+
+            HBox backRow = new HBox(backBtn);
+            backRow.setAlignment(Pos.CENTER);
+
+            bookTicketLayout.getChildren().addAll(fromRow, toRow, backRow);
+            Scene bookTicketScene = new Scene(bookTicketLayout, 700, 400);
+            stage.setScene(bookTicketScene);
+        });
         URL cssURL = getClass().getResource("/style.css");        // Add leading slash to look in 'resources' root
         if (cssURL != null) {
-            scene.getStylesheets().add(cssURL.toExternalForm());
+            welcomeScene.getStylesheets().add(cssURL.toExternalForm());
         } else {
             System.err.println("style.css not found!");
         }
         stage.setTitle("DMRC Ticket Machine");
-        stage.setScene(scene);
+        stage.setScene(welcomeScene);
         stage.show();
     }
     private void updateClock(Label clockLabel){
@@ -320,6 +363,19 @@ public class Main extends Application{
         loginStage.setScene(loginScene);
         loginStage.initModality(Modality.APPLICATION_MODAL); // Tie it to main window
         loginStage.show();
+    }
+    private Scene createBookTktscene(Stage stage, Scene welcomeScene){
+        Label title = new Label("Book Your Ticket: ");
+        title.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #0D47A1;");
+
+        Button backBtn = new Button("Back");
+        backBtn.setOnAction(e -> stage.setScene(welcomeScene));
+
+        VBox layout = new VBox(20, title,backBtn);
+        layout.setAlignment(Pos.TOP_CENTER);
+        layout.setPadding(new Insets(30));
+
+        return new Scene(layout, 700, 400);
     }
     public static void main(String[] args) {
         launch(args);
