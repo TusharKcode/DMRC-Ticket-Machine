@@ -33,7 +33,7 @@ src/
 ├── resources/
 │ ├── style.css <-- Custom styling for modern look
 │ └── config.properties <-- Station name & terminal ID config
-
+│ └── subway.png <-- DMRC metro logo/icon
 ---
 
 ## How to Run
@@ -47,54 +47,53 @@ src/
 
 ## Planned Features
 
-- [x] Welcome Screen UI
-- [x] Modern UI Styling using CSS
-- [x] Dynamic Station Name & Terminal ID using `config.properties`
-- [ ] Station selection & fare calculator
 - [ ] Ticket generation with QR
-- [ ] Card recharge simulation
-- [ ] Data persistence using SQLite
+- [ ] Card recharge simulation (with balance updates)
+- [ ] View travel/ticket history screen
+- [ ] Data persistence using SQLite for transactions
 
 ---
 
 ## Features Completed:
 - JavaFX Project setup with Gradle & JDK 17
-- Welcome UI includes:
+- Welcome Screen UI with:
     - **Station name & Terminal ID** fetched dynamically from `config.properties`
     - Real-time clock displayed at the bottom
-    - Top header with:
-        - DMRC Welcome message (left)
-        - Station info (right)
+    - Top header with DMRC logo, title, station info, and language selector
     - Four modern buttons in 2x2 layout:
         - Book Ticket
         - Recharge Card
         - View History
         - Exit
     - Fully styled using `style.css`
-    - Ticker (News Bar) with bilingual messages (English & Hindi)
+    - Ticker (announcement bar) with scrolling bilingual news/messages
     - Metro line animated illustration with current station highlight
+    - Modern 2x2 layout for buttons: Book Ticket, Recharge, History, Exit
     - Multi-language support toggle (English/Hindi)
+    - Metro tips section updating dynamically
+    - Animated transitions on startup
     - Hidden Admin Panel access (Ctrl+Alt+A or corner button)
 
+- **Book Ticket Screen**:
+    - Reuses header and clock for consistency
+    - From and To station selection (combo boxes)
+    - Dynamic fare and distance calculation
+    - Modern, card-like layout with clean styling
+    - Smooth transition back to welcome screen with stable stage size
+- Modular CSS styling (`style.css`) for unified design
+- Basic admin login window (username & password check)
 ---
 
-## Next Steps:
-- Implement **Book Ticket screen** with:
-    - Source & destination dropdown
-    - Fare calculation
-    - Ticket preview & QR generation
+## Improvements in Progress
 
-- Add screens for:
-    - Recharge functionality
-    - View travel history
-
-- Enhance UI with:
-    - Icons
-    - Animated transitions
-    - Custom styling themes
+- Further enhance button animations and transitions
+- Add symbolic metro line illustrations or mini maps
+- Refine admin panel functionality and diagnostics
 
 ---
 
 ## Author
 **Tushar**  
 MCA Student | Aspiring Full Stack Developer | Open to Learn
+
+Feel free to suggest or fork! Contributions and feedback welcome.

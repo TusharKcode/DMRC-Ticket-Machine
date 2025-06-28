@@ -9,7 +9,6 @@ import javafx.scene.image.*;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
-import java.lang.reflect.Array;
 import java.util.*;
 import java.io.*;
 import java.time.*;
@@ -89,7 +88,6 @@ public class Main extends Application{
                 "Carry a valid token/card during travel.",
                 "Help senior citizens and people with disabilities.",
         };
-        Random rand = new Random();
         Label tipLabel = new Label("Tip of the Day: " + metroTips[0]);
         tipLabel.setStyle("-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #444; -fx-padding: 10 0 10 0;");
         tipLabel.setWrapText(true);
@@ -101,7 +99,6 @@ public class Main extends Application{
         tipBox.setPadding(new Insets(8));
         tipBox.setStyle("-fx-background-color: #E3F2FD; -fx-border-color: #1565C0; -fx-border-width: 0 0 2px 0;");
 
-                                                            //Tip timeline (changes every 5 seconds)
         Timeline tipTimeline = new Timeline(new KeyFrame(Duration.seconds(5), e -> {
             int idx = new Random().nextInt(metroTips.length);
             FadeTransition fadeOut = new FadeTransition(Duration.millis(500), tipLabel);
@@ -283,35 +280,93 @@ public class Main extends Application{
         });
         //-------------------------------------------------------------------------Book ticket button
         bookTicketbtn.setOnAction(e -> {
-            VBox bookTicketLayout = new VBox(20);
-            bookTicketLayout.setAlignment(Pos.CENTER);
-            bookTicketLayout.setPadding(new Insets(20));
+            // -------- Header re-use ----------
+            Label bookTitle = new Label("DMRC Ticket Machine");
+            bookTitle.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
 
-            Label fromLabel = new Label("From: ");
+            Label bookClock = new Label();
+            bookClock.setStyle("-fx-font-size: 14px;");
+            updateClock(bookClock);
+
+            Timeline bookClockTimeline = new Timeline(new KeyFrame(Duration.seconds(1), e2 ->
+                    updateClock(bookClock)));
+            bookClockTimeline.setCycleCount(Animation.INDEFINITE);
+            bookClockTimeline.play();
+
+            HBox bookTitleBar = new HBox(20, bookTitle, bookClock);
+            bookTitleBar.setPadding(new Insets(15,20,10,20));
+            bookTitleBar.setAlignment(Pos.CENTER_LEFT);
+            bookTitleBar.setStyle("-fx-background-color: white;");
+
+            VBox header = new VBox(bookTitleBar);
+
+            // -------- Left (From Station) ----------
+            Label fromLabel = new Label("From Station:");
             ComboBox<String> fromComboBox = new ComboBox<>();
             fromComboBox.getItems().addAll(stationList);
-            fromComboBox.setPromptText("From Station: ");
+            fromComboBox.setPromptText("Select From");
 
-            Label toLabel = new Label("To: ");
+            VBox fromBox = new VBox(10, fromLabel, fromComboBox);
+            fromBox.setAlignment(Pos.CENTER);
+            fromBox.setPadding(new Insets(10));
+            fromBox.setStyle("-fx-background-color: #F5F5F5; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-background-radius: 5;");
+            fromBox.setPrefWidth(250);
+
+            // -------- Right (To Station) ----------
+            Label toLabel = new Label("To Station:");
             ComboBox<String> toComboBox = new ComboBox<>();
             toComboBox.getItems().addAll(stationList);
-            toComboBox.setPromptText("To Station: ");
+            toComboBox.setPromptText("Select To");
 
+            VBox toBox = new VBox(10, toLabel, toComboBox);
+            toBox.setAlignment(Pos.CENTER);
+            toBox.setPadding(new Insets(10));
+            toBox.setStyle("-fx-background-color: #F5F5F5; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-background-radius: 5;");
+            toBox.setPrefWidth(250);
+
+            // -------- Center layout with From & To ----------
+            HBox centerBox = new HBox(30, fromBox, toBox);
+            centerBox.setAlignment(Pos.CENTER);
+            centerBox.setPadding(new Insets(20));
+
+            // -------- Distance & Fare --------
+            Label distanceLabel = new Label("Distance: 0 km");
+            Label fareLabel = new Label("Fare: ₹0");
+            fareLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: green;");
+
+            HBox infoBox = new HBox(40, distanceLabel, fareLabel);
+            infoBox.setAlignment(Pos.CENTER);
+            infoBox.setPadding(new Insets(10));
+
+            // -------- Buttons --------
+            Button confirmBtn = new Button("Confirm");
             Button backBtn = new Button("Back");
+
+            HBox buttonBox = new HBox(30, confirmBtn, backBtn);
+            buttonBox.setAlignment(Pos.CENTER);
+            buttonBox.setPadding(new Insets(15));
+
+            // -------- Update fare & distance logic --------
+            fromComboBox.setOnAction(ev -> updateFareAndDistance(fromComboBox, toComboBox, fareLabel, distanceLabel));
+            toComboBox.setOnAction(ev -> updateFareAndDistance(fromComboBox, toComboBox, fareLabel, distanceLabel));
+
+            // -------- Back button action --------
             backBtn.setOnAction(ev -> stage.setScene(welcomeScene));
-            HBox fromRow = new HBox(10, fromLabel, fromComboBox);
-            fromRow.setAlignment(Pos.CENTER);
 
-            HBox toRow = new HBox(10, toLabel, toComboBox);
-            toRow.setAlignment(Pos.CENTER);
+            // -------- Main vertical layout --------
+            VBox mainLayout = new VBox(20, header, centerBox, infoBox, buttonBox);
+            mainLayout.setAlignment(Pos.TOP_CENTER);
+            mainLayout.setPadding(new Insets(10));
 
-            HBox backRow = new HBox(backBtn);
-            backRow.setAlignment(Pos.CENTER);
+            Scene bookTicketScene = new Scene(mainLayout, 700, 500);
+            URL cssURL = getClass().getResource("/style.css");
+            if (cssURL != null) {
+                bookTicketScene.getStylesheets().add(cssURL.toExternalForm());
+            }
 
-            bookTicketLayout.getChildren().addAll(fromRow, toRow, backRow);
-            Scene bookTicketScene = new Scene(bookTicketLayout, 700, 400);
             stage.setScene(bookTicketScene);
         });
+
         URL cssURL = getClass().getResource("/style.css");        // Add leading slash to look in 'resources' root
         if (cssURL != null) {
             welcomeScene.getStylesheets().add(cssURL.toExternalForm());
@@ -364,19 +419,24 @@ public class Main extends Application{
         loginStage.initModality(Modality.APPLICATION_MODAL); // Tie it to main window
         loginStage.show();
     }
-    private Scene createBookTktscene(Stage stage, Scene welcomeScene){
-        Label title = new Label("Book Your Ticket: ");
-        title.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #0D47A1;");
+    private void updateFareAndDistance(ComboBox<String> from, ComboBox<String> to, Label fareLabel, Label distanceLabel) {
+        String fromStation = from.getValue();
+        String toStation = to.getValue();
 
-        Button backBtn = new Button("Back");
-        backBtn.setOnAction(e -> stage.setScene(welcomeScene));
+        if (fromStation != null && toStation != null && !fromStation.equals(toStation)) {
+            int fromIndex = from.getItems().indexOf(fromStation);
+            int toIndex = to.getItems().indexOf(toStation);
+            int distance = Math.abs(fromIndex - toIndex) * 2; // Example: 2 km per station gap
+            int fare = Math.abs(fromIndex - toIndex) * 10 + 5;
 
-        VBox layout = new VBox(20, title,backBtn);
-        layout.setAlignment(Pos.TOP_CENTER);
-        layout.setPadding(new Insets(30));
-
-        return new Scene(layout, 700, 400);
+            fareLabel.setText("Fare: ₹" + fare);
+            distanceLabel.setText("Distance: " + distance + " km");
+        } else {
+            fareLabel.setText("Fare: ₹0");
+            distanceLabel.setText("Distance: 0 km");
+        }
     }
+
     public static void main(String[] args) {
         launch(args);
     }
