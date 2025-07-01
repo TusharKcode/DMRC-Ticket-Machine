@@ -212,9 +212,22 @@ public class welcomeScreen {
 
         // Book ticket action
         bookTicketBtn.setOnAction(e -> {
-            Scene bookScene = bookTicketScreen.createBookTicketScene(stage, welcomeScene[0], stationList);
-            stage.setScene(bookScene);
+            boolean wasMaximized = stage.isMaximized();
+
+            Scene bookTicketScene = bookTicketScreen.createBookTicketScene(stage, welcomeScene[0], stationList);
+
+            // Switch scene first
+            stage.setScene(bookTicketScene);
+
+            // Then immediately re-maximize if it was maximized before
+            if (wasMaximized) {
+                // Forcefully request maximize again
+                stage.setMaximized(false); // Reset first
+                stage.setMaximized(true);
+            }
         });
+
+
 
         // Admin access hidden button
         Button hiddenAdminBtn = new Button();

@@ -79,7 +79,15 @@ public class bookTicketScreen {
         fromComboBox.setOnAction(ev -> updateFareAndDistance(fromComboBox, toComboBox, fareLabel, distanceLabel));
         toComboBox.setOnAction(ev -> updateFareAndDistance(fromComboBox, toComboBox, fareLabel, distanceLabel));
 
-        backBtn.setOnAction(ev -> stage.setScene(welcomeScene));
+        backBtn.setOnAction(ev -> {
+            boolean wasMaximized = stage.isMaximized();
+            stage.setScene(welcomeScene);
+            if (wasMaximized) {
+                stage.setMaximized(false);
+                stage.setMaximized(true);
+            }
+        });
+
 
         VBox mainLayout = new VBox(20, header, centerBox, infoBox, buttonBox);
         mainLayout.setAlignment(Pos.TOP_CENTER);
