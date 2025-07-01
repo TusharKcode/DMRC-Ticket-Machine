@@ -24,20 +24,21 @@ This is a desktop application simulating a DMRC Metro Station Ticket Machine, al
 ---
 
 ## Folder Structure
-
-`src/
-├── main/
-│   ├── java/
-│   │   └── org/
-│   │       └── dmrc/
-│   │           ├── Main.java            <-- Application launcher & scene management
-│   │           ├── WelcomeScreen.java   <-- Welcome screen UI and logic
-│   │           └── BookTicketScreen.java <-- Book Ticket screen logic
-│
-├── resources/
-│   ├── style.css          <-- Custom CSS styling for modern look
-│   ├── config.properties  <-- Station name & terminal ID config
-│   └── subway.png         <-- DMRC metro logo/icon`
+```
+src/
+└── main/
+      ├── java/
+      │   └── org/
+      │       └── dmrc/
+      │           ├── Main.java            <-- Application launcher & scene management
+      │           ├── WelcomeScreen.java   <-- Welcome screen UI and logic
+      │           └── BookTicketScreen.java <-- Book Ticket screen logic
+      │
+      └── resources/
+      ├── style.css          <-- Custom CSS styling for modern look
+      ├── config.properties  <-- Station name & terminal ID config
+      └── subway.png         <-- DMRC metro logo/icon
+```
 
 ---
 
