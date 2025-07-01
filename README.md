@@ -2,17 +2,18 @@
 
 A JavaFX-based metro ticket machine simulator inspired by Delhi Metro's DMRC kiosks.
 
-This is a JavaFX-based desktop application simulating the functionality of a **DMRC Metro Station Ticket Machine**.  
-The app provides a graphical user interface for users to:
-- Book QR-based metro tickets
-- Metro Card Recharge
-- View Ticket History
-- Ticket summary with fare calculation
-- Interactive GUI using JavaFX
+This is a desktop application simulating a DMRC Metro Station Ticket Machine, allowing users to:
+
+-Book QR-based metro tickets
+-Recharge metro cards
+-View travel history
+-See ticket summary with fare and distance calculation
+-Interact via a modern, animated JavaFX GUI
 
 ---
 
 ### Technologies Used:
+
 - Java 17 (Temurin JDK)
 - JavaFX 21
 - IntelliJ IDEA (Build System: IntelliJ / Gradle)
@@ -23,17 +24,21 @@ The app provides a graphical user interface for users to:
 ---
 
 ## Folder Structure
-src/
+
+`src/
 ├── main/
-│ ├── java/
-│ │ └── org/
-│ │     └── dmrc/
-│ │         └── Main.java <-- Welcome screen UI
+│   ├── java/
+│   │   └── org/
+│   │       └── dmrc/
+│   │           ├── Main.java            <-- Application launcher & scene management
+│   │           ├── WelcomeScreen.java   <-- Welcome screen UI and logic
+│   │           └── BookTicketScreen.java <-- Book Ticket screen logic
 │
 ├── resources/
-│ ├── style.css <-- Custom styling for modern look
-│ └── config.properties <-- Station name & terminal ID config
-│ └── subway.png <-- DMRC metro logo/icon
+│   ├── style.css          <-- Custom CSS styling for modern look
+│   ├── config.properties  <-- Station name & terminal ID config
+│   └── subway.png         <-- DMRC metro logo/icon`
+
 ---
 
 ## How to Run
@@ -55,6 +60,7 @@ src/
 ---
 
 ## Features Completed:
+
 - JavaFX Project setup with Gradle & JDK 17
 - Welcome Screen UI with:
     - **Station name & Terminal ID** fetched dynamically from `config.properties`
@@ -73,26 +79,36 @@ src/
     - Metro tips section updating dynamically
     - Animated transitions on startup
     - Hidden Admin Panel access (Ctrl+Alt+A or corner button)
+    - Stable UI size on maximizing and switching screens
 
 - **Book Ticket Screen**:
-    - Reuses header and clock for consistency
-    - From and To station selection (combo boxes)
+    - Reuses header and live clock for consistency
+    - From and To station dropdowns with modern card-style layout
     - Dynamic fare and distance calculation
     - Modern, card-like layout with clean styling
     - Smooth transition back to welcome screen with stable stage size
-- Modular CSS styling (`style.css`) for unified design
-- Basic admin login window (username & password check)
+    - Modular CSS styling (`style.css`) for unified design
+    - Basic admin login window (username & password check)
 ---
 
-## Improvements in Progress
+## Code Architecture
 
-- Further enhance button animations and transitions
-- Add symbolic metro line illustrations or mini maps
-- Refine admin panel functionality and diagnostics
+- Separated Java files (`WelcomeScreen.java, BookTicketScreen.java`) for better modularity and maintainability
+- Shared styling and configurations
+
+---
+## Planned / In Progress
+
+- QR code generation for booked tickets
+- Metro card recharge simulation with virtual balance
+- View travel/ticket history screen
+- SQLite integration for local storage of tickets and transactions
+- Admin panel diagnostics & reports
 
 ---
 
 ## Author
+
 **Tushar**  
 MCA Student | Aspiring Full Stack Developer | Open to Learn
 
