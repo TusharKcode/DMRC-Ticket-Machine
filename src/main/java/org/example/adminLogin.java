@@ -33,6 +33,7 @@ public class adminLogin {
                 statusLabel.setText("Access Granted...");
                 loginStage.close();
                 System.out.println("Opening Admin Panel....");
+                openAdminPanel();
             } else {
                 statusLabel.setText("Invalid Credentials...");
             }
@@ -47,4 +48,36 @@ public class adminLogin {
         loginStage.initModality(Modality.APPLICATION_MODAL);
         loginStage.show();
     }
+    private VBox createPanelLayout() {
+        Label welcomeLabel = new Label("Welcome, Admin!");
+        Label statusLabel = new Label("Machine Status: Working");
+        Label ticketCountLabel = new Label("Tickets Issued: 0");
+        Label balanceLabel = new Label("Total Balance: ₹0");
+
+        Button resetMachineBtn = new Button("Reset Machine");
+        Button logsBtn = new Button("View Logs");
+        Button logoutBtn = new Button("Logout");
+
+        resetMachineBtn.setOnAction(e -> System.out.println("Machine reset action triggered"));
+        logsBtn.setOnAction(e -> System.out.println("Logs button clicked!"));
+        logoutBtn.setOnAction(e -> logoutBtn.getScene().getWindow().hide());
+
+        VBox panelLayout = new VBox(15, welcomeLabel, statusLabel, ticketCountLabel, balanceLabel,
+                resetMachineBtn, logsBtn, logoutBtn);
+        panelLayout.setPadding(new Insets(20));
+        panelLayout.setAlignment(Pos.CENTER);
+
+        return panelLayout;
+    }
+    public void openAdminPanel() {
+        Stage adminStage = new Stage();
+        adminStage.setTitle("DMRC Admin Panel");
+
+        VBox panelLayout = createPanelLayout();
+
+        Scene panelScene = new Scene(panelLayout, 400, 400);
+        adminStage.setScene(panelScene);
+        adminStage.show();
+    }
+
 }
