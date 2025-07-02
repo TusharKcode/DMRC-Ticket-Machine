@@ -78,6 +78,32 @@ public class bookTicketScreen {
 
         fromComboBox.setOnAction(ev -> updateFareAndDistance(fromComboBox, toComboBox, fareLabel, distanceLabel));
         toComboBox.setOnAction(ev -> updateFareAndDistance(fromComboBox, toComboBox, fareLabel, distanceLabel));
+                                                                                //Confirm Button here
+        confirmBtn.setOnAction(ev -> {
+            String fromStation = fromComboBox.getValue();
+            String toStation = toComboBox.getValue();
+
+            if(fromStation != null && toStation !=  null && !fromStation.equals(toStation)){
+                int fromIndex = fromComboBox.getItems().indexOf(fromStation);
+                int toIndex = toComboBox.getItems().indexOf(toStation);
+                int fare = Math.abs(fromIndex - toIndex) * 10 + 5;
+
+                appData.ticketIssued++;                                             //Update App Data
+                appData.totalBalance += fare;
+
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Ticket Booked!");
+                alert.setHeaderText(null);
+                alert.setContentText("Ticket Booked Successfully!\n Fare: ₹" + fare);
+                alert.showAndWait();
+            } else {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Invalid Selection");
+                alert.setHeaderText(null);
+                alert.setContentText("Please select valid From and To station");
+                alert.showAndWait();
+            }
+        });
 
         backBtn.setOnAction(ev -> {
             boolean wasMaximized = stage.isMaximized();
@@ -87,7 +113,6 @@ public class bookTicketScreen {
                 stage.setMaximized(true);
             }
         });
-
 
         VBox mainLayout = new VBox(20, header, centerBox, infoBox, buttonBox);
         mainLayout.setAlignment(Pos.TOP_CENTER);
@@ -99,7 +124,6 @@ public class bookTicketScreen {
         if (cssURL != null) {
             bookScene.getStylesheets().add(cssURL.toExternalForm());
         }
-
         return bookScene;
     }
 

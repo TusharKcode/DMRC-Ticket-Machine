@@ -51,8 +51,8 @@ public class adminLogin {
     private VBox createPanelLayout() {
         Label welcomeLabel = new Label("Welcome, Admin!");
         Label statusLabel = new Label("Machine Status: Working");
-        Label ticketCountLabel = new Label("Tickets Issued: 0");
-        Label balanceLabel = new Label("Total Balance: ₹0");
+        Label ticketCountLabel = new Label("Tickets Issued: 0" + appData.ticketIssued);
+        Label balanceLabel = new Label("Total Balance: ₹0" + appData.totalBalance);
 
         Button resetMachineBtn = new Button("Reset Machine");
         Button logsBtn = new Button("View Logs");
