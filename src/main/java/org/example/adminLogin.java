@@ -1,5 +1,7 @@
 package org.example;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -7,6 +9,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class adminLogin {
 
@@ -48,11 +51,11 @@ public class adminLogin {
         loginStage.initModality(Modality.APPLICATION_MODAL);
         loginStage.show();
     }
-    private VBox createPanelLayout() {
+    private VBox createPanelLayout(Label ticketCountLabel, Label balanceLabel) {
         Label welcomeLabel = new Label("Welcome, Admin!");
         Label statusLabel = new Label("Machine Status: Working");
-        Label ticketCountLabel = new Label("Tickets Issued: 0" + appData.ticketIssued);
-        Label balanceLabel = new Label("Total Balance: ₹0" + appData.totalBalance);
+        ticketCountLabel.setText("Tickets Issued: " + appData.ticketIssued);
+        balanceLabel.setText("Total Balance: ₹" + appData.totalBalance);
 
         Button resetMachineBtn = new Button("Reset Machine");
         Button logsBtn = new Button("View Logs");
@@ -73,11 +76,22 @@ public class adminLogin {
         Stage adminStage = new Stage();
         adminStage.setTitle("DMRC Admin Panel");
 
-        VBox panelLayout = createPanelLayout();
+        Label ticketCountLabel = new Label();
+        Label balancelabel = new Label();
+
+        VBox panelLayout = createPanelLayout(ticketCountLabel, balancelabel);
 
         Scene panelScene = new Scene(panelLayout, 400, 400);
         adminStage.setScene(panelScene);
         adminStage.show();
-    }
 
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+            ticketCountLabel.setText("Ticket Issued: " + appData.ticketIssued);
+            balancelabel.setText("Total balance: ₹" + appData.totalBalance);
+        }));
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
+                                                            //Stops Timeline when Admin Panel is close
+        adminStage.setOnCloseRequest(e -> timeline.stop());
+    }
 }
