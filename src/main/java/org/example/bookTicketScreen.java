@@ -91,6 +91,12 @@ public class bookTicketScreen {
                 appData.ticketIssued++;                                             //Update App Data
                 appData.totalBalance += fare;
 
+                                                                                        //Add Log Entry
+                String logEntry = "Ticket booked from " + fromStation + " to " + toStation + " | Fare: ₹" + fare;
+                appData.logs.add(logEntry);
+                System.out.println("Ticket Booked! Total tickets: " + appData.ticketIssued +
+                        "Total Balance: ₹" + appData.totalBalance);
+
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Ticket Booked!");
                 alert.setHeaderText(null);

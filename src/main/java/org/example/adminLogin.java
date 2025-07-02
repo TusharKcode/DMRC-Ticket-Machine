@@ -62,7 +62,7 @@ public class adminLogin {
         Button logoutBtn = new Button("Logout");
 
         resetMachineBtn.setOnAction(e -> System.out.println("Machine reset action triggered"));
-        logsBtn.setOnAction(e -> System.out.println("Logs button clicked!"));
+        logsBtn.setOnAction(e -> showLogs());
         logoutBtn.setOnAction(e -> logoutBtn.getScene().getWindow().hide());
 
         VBox panelLayout = new VBox(15, welcomeLabel, statusLabel, ticketCountLabel, balanceLabel,
@@ -93,5 +93,23 @@ public class adminLogin {
         timeline.play();
                                                             //Stops Timeline when Admin Panel is close
         adminStage.setOnCloseRequest(e -> timeline.stop());
+    }
+    private void showLogs(){
+        Stage logStage = new Stage();
+        logStage.setTitle("Transaction Logs");
+
+        ListView<String> logListView = new ListView<>();
+        logListView.getItems().addAll(appData.logs);
+
+        Button closeBtn = new Button("Close");
+        closeBtn.setOnAction(e -> logStage.close());
+
+        VBox layout = new VBox(10, logListView, closeBtn);
+        layout.setPadding(new Insets(15));
+        layout.setAlignment(Pos.CENTER);
+
+        Scene scene = new Scene(layout, 400, 400);
+        logStage.setScene(scene);
+        logStage.show();
     }
 }
