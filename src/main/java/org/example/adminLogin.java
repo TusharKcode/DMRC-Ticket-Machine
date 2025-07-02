@@ -54,12 +54,33 @@ public class adminLogin {
     private VBox createPanelLayout(Label ticketCountLabel, Label balanceLabel) {
         Label welcomeLabel = new Label("Welcome, Admin!");
         Label statusLabel = new Label("Machine Status: Working");
+
         ticketCountLabel.setText("Tickets Issued: " + appData.ticketIssued);
         balanceLabel.setText("Total Balance: ₹" + appData.totalBalance);
+
+        welcomeLabel.setStyle("-fx-font-size: 22px; -fx-font-weight: bold;");
+        statusLabel.setStyle("-fx-font-size: 16px;");
+        ticketCountLabel.setStyle("-fx-font-size: 16px;");
+        balanceLabel.setStyle("-fx-font-size: 16px;");
 
         Button resetMachineBtn = new Button("Reset Machine");
         Button logsBtn = new Button("View Logs");
         Button logoutBtn = new Button("Logout");
+
+        String buttonStyle = "-fx-background-color: #3366cc; -fx-text-fill: white; -fx-font-size: 14px; " +
+                "-fx-background-radius: 8;";
+        resetMachineBtn.setStyle(buttonStyle);
+        logsBtn.setStyle(buttonStyle);
+        logoutBtn.setStyle(buttonStyle);
+
+        resetMachineBtn.setOnMouseEntered(e -> resetMachineBtn.setStyle(buttonStyle + "-fx-opacity: 0.85;"));
+        resetMachineBtn.setOnMouseExited(e -> resetMachineBtn.setStyle(buttonStyle));
+
+        logsBtn.setOnMouseEntered(e -> logsBtn.setStyle(buttonStyle + "-fx-opacity: 0.85;"));
+        logsBtn.setOnMouseExited(e -> logsBtn.setStyle(buttonStyle));
+
+        logoutBtn.setOnMouseEntered(e -> logoutBtn.setStyle(buttonStyle + "-fx-opacity: 0.85;"));
+        logoutBtn.setOnMouseExited(e -> logoutBtn.setStyle(buttonStyle));
 
         resetMachineBtn.setOnAction(e -> {
             appData.ticketIssued = 0;
@@ -82,8 +103,15 @@ public class adminLogin {
                 resetMachineBtn, logsBtn, logoutBtn);
         panelLayout.setPadding(new Insets(20));
         panelLayout.setAlignment(Pos.CENTER);
+        panelLayout.setStyle("-fx-background-color: white; -fx-background-radius: 12; " +
+                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 4);");
 
-        return panelLayout;
+        VBox rootLayout = new VBox(panelLayout);
+        rootLayout.setAlignment(Pos.CENTER);
+        rootLayout.setPadding(new Insets(30));
+        rootLayout.setStyle("fx-background-color: linear-gradient(to bottom right, #f0f4ff, #dbe5ff);");
+
+        return rootLayout;
     }
     public void openAdminPanel() {
         Stage adminStage = new Stage();
