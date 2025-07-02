@@ -61,7 +61,20 @@ public class adminLogin {
         Button logsBtn = new Button("View Logs");
         Button logoutBtn = new Button("Logout");
 
-        resetMachineBtn.setOnAction(e -> System.out.println("Machine reset action triggered"));
+        resetMachineBtn.setOnAction(e -> {
+            appData.ticketIssued = 0;
+            appData.totalBalance = 0;
+            appData.logs.clear();
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Machine Reset");
+            alert.setHeaderText(null);
+            alert.setContentText("Machine data has been reset");
+            alert.showAndWait();
+
+            System.out.println("Machine data reset: tickets, balance and logs cleared");
+        });
+
         logsBtn.setOnAction(e -> showLogs());
         logoutBtn.setOnAction(e -> logoutBtn.getScene().getWindow().hide());
 
