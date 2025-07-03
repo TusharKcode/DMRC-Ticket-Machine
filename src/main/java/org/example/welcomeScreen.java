@@ -103,6 +103,31 @@ public class welcomeScreen {
         clockContainer.setPadding(new Insets(10));
 
         VBox topLayout = new VBox(titleBar, clockContainer);
+                                                                                            //Tips of the day
+        String[] tips = {
+                "Tip of the day: Use smart cards to save time at stations!",
+                "Tip of the day: Always stand on the left side of escalators.",
+                "Tip of the day: Keep your belongings safe during travel.",
+                "Tip of the day: Let passengers exit before you enter.",
+                "Tip of the day: Recharge online to skip queues."
+        };
+        Label tipLabel = new Label();
+        tipLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: darkgreen;");
+        tipLabel.setWrapText(true);
+        tipLabel.setMaxWidth(400);
+        tipLabel.setAlignment(Pos.CENTER);
+
+        Timeline tipTimeline = new Timeline(new javafx.animation.KeyFrame(Duration.seconds(0),
+                e-> {
+            int index = (int)(Math.random() * tips.length);
+            tipLabel.setText(tips[index]);
+                }), new javafx.animation.KeyFrame(Duration.seconds(5)));
+        tipTimeline.setCycleCount(Timeline.INDEFINITE);
+        tipTimeline.play();
+
+        VBox tipBox = new VBox(tipLabel);
+        tipBox.setAlignment(Pos.CENTER);
+        tipBox.setPadding(new Insets(20,0,0,0));
 
         // Buttons
         Button bookTicketBtn = new Button("Book Ticket");
@@ -110,11 +135,12 @@ public class welcomeScreen {
         Button historyBtn = new Button("View History");
         Button exitBtn = new Button("Exit");
 
-        double btnWidth = 220;
-        bookTicketBtn.setMinWidth(btnWidth);
-        rechargeBtn.setMinWidth(btnWidth);
-        historyBtn.setMinWidth(btnWidth);
-        exitBtn.setMinWidth(btnWidth);
+        double btnWidth = 250;
+        double btnHeight = 50;
+        bookTicketBtn.setMinSize(btnWidth, btnHeight);
+        rechargeBtn.setMinSize(btnWidth, btnHeight);
+        historyBtn.setMinSize(btnWidth, btnHeight);
+        exitBtn.setMinSize(btnWidth, btnHeight);
 
         bookTicketBtn.getStyleClass().add("button");
         rechargeBtn.getStyleClass().add("button");
@@ -126,9 +152,12 @@ public class welcomeScreen {
         HBox row2 = new HBox(40, historyBtn, exitBtn);
         row2.setAlignment(Pos.CENTER);
 
-        VBox buttonLayout = new VBox(50, row1, row2);
+        VBox buttonLayout = new VBox(40, row1, row2);
         buttonLayout.setAlignment(Pos.CENTER);
-        buttonLayout.setPadding(new Insets(40, 0, 40, 0));
+        buttonLayout.setPadding(new Insets(20, 0, 40, 0));
+
+        VBox centerLayout = new VBox(tipBox, buttonLayout);
+        centerLayout.setAlignment(Pos.TOP_CENTER);
 
         // Button animations
         buttonLayout.setTranslateY(100);
@@ -188,7 +217,7 @@ public class welcomeScreen {
 
         BorderPane root = new BorderPane();
         root.setTop(topLayout);
-        root.setCenter(buttonLayout);
+        root.setCenter(centerLayout);
         root.setBottom(tickerContainer);
         root.setStyle("-fx-background-color: #F1F8FF;");
                                                                                     // Language change
