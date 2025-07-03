@@ -112,7 +112,7 @@ public class welcomeScreen {
                 "Tip of the day: Recharge online to skip queues."
         };
         Label tipLabel = new Label();
-        tipLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: darkgreen;");
+        tipLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: darkgreen; -fx-background-color: #FFF9C4");
         tipLabel.setWrapText(true);
         tipLabel.setMaxWidth(400);
         tipLabel.setAlignment(Pos.CENTER);
@@ -124,10 +124,6 @@ public class welcomeScreen {
                 }), new javafx.animation.KeyFrame(Duration.seconds(5)));
         tipTimeline.setCycleCount(Timeline.INDEFINITE);
         tipTimeline.play();
-
-        VBox tipBox = new VBox(tipLabel);
-        tipBox.setAlignment(Pos.CENTER);
-        tipBox.setPadding(new Insets(20,0,0,0));
 
         // Buttons
         Button bookTicketBtn = new Button("Book Ticket");
@@ -152,23 +148,20 @@ public class welcomeScreen {
         HBox row2 = new HBox(40, historyBtn, exitBtn);
         row2.setAlignment(Pos.CENTER);
 
-        VBox buttonLayout = new VBox(40, row1, row2);
-        buttonLayout.setAlignment(Pos.CENTER);
-        buttonLayout.setPadding(new Insets(20, 0, 40, 0));
-
-        VBox centerLayout = new VBox(tipBox, buttonLayout);
-        centerLayout.setAlignment(Pos.TOP_CENTER);
+        VBox centerLayout = new VBox(40, tipLabel, row1, row2);
+        centerLayout.setAlignment(Pos.CENTER);
+        centerLayout.setPadding(new Insets(20, 0, 40, 0));
 
         // Button animations
-        buttonLayout.setTranslateY(100);
-        buttonLayout.setOpacity(0);
+        centerLayout.setTranslateY(100);
+        centerLayout.setOpacity(0);
 
-        TranslateTransition slideIn = new TranslateTransition(Duration.seconds(1), buttonLayout);
+        TranslateTransition slideIn = new TranslateTransition(Duration.seconds(1), centerLayout);
         slideIn.setFromY(100);
         slideIn.setToY(0);
         slideIn.setDelay(Duration.millis(200));
 
-        FadeTransition fadeButtons = new FadeTransition(Duration.seconds(1), buttonLayout);
+        FadeTransition fadeButtons = new FadeTransition(Duration.seconds(1), centerLayout);
         fadeButtons.setFromValue(0);
         fadeButtons.setToValue(1);
         fadeButtons.setDelay(Duration.millis(200));
