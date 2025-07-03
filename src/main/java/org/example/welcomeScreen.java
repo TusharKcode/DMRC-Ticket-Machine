@@ -147,7 +147,7 @@ public class welcomeScreen {
         ParallelTransition intro = new ParallelTransition(slideIn, fadeButtons);
         intro.play();
 
-        // Fade logo/title
+                                                                                    // Fade logo/title
         FadeTransition fadeLogo = new FadeTransition(Duration.seconds(1), logoView);
         fadeLogo.setFromValue(0);
         fadeLogo.setToValue(1);
@@ -160,7 +160,7 @@ public class welcomeScreen {
 
         new ParallelTransition(fadeLogo, fadeTitle).play();
 
-        // Ticker
+                                                                                            // Ticker
         Label tickerLabel = new Label("Blue Line Delay | Card Recharge ₹10 Cashback Today | Happy Metro Week! | ब्लू लाइन में देरी | कार्ड रिचार्ज पर ₹10 कैशबैक आज | हैप्पी मेट्रो सप्ताह!");
         tickerLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #222;");
 
@@ -191,8 +191,7 @@ public class welcomeScreen {
         root.setCenter(buttonLayout);
         root.setBottom(tickerContainer);
         root.setStyle("-fx-background-color: #F1F8FF;");
-
-        // Language change
+                                                                                    // Language change
         languageSelector.setOnAction(e -> {
             String lang = languageSelector.getValue();
             Map<String, String> labels = lang.equals("हिन्दी") ? hiLabels : enLabels;
@@ -201,35 +200,28 @@ public class welcomeScreen {
             historyBtn.setText(labels.get("history"));
             exitBtn.setText(labels.get("exit"));
         });
-
-        // Button actions
+                                                                                    // Button actions
         rechargeBtn.setOnAction(e -> System.out.println("Recharge Clicked"));
         historyBtn.setOnAction(e -> System.out.println("History Clicked"));
         exitBtn.setOnAction(e -> stage.close());
 
         Scene[] welcomeScene = new Scene[1];
         welcomeScene[0] = new Scene(new StackPane(root), 700, 400);
-
-        // Book ticket action
+                                                                                // Book ticket action
         bookTicketBtn.setOnAction(e -> {
             boolean wasMaximized = stage.isMaximized();
 
             Scene bookTicketScene = bookTicketScreen.createBookTicketScene(stage, welcomeScene[0], stationList);
-
-            // Switch scene first
+                                                                                 // Switch scene first
             stage.setScene(bookTicketScene);
-
-            // Then immediately re-maximize if it was maximized before
+                                                // Then immediately re-maximize if it was maximized before
             if (wasMaximized) {
-                // Forcefully request maximize again
-                stage.setMaximized(false); // Reset first
+                                                                // Forcefully request maximize again
+                stage.setMaximized(false);                      // Reset first
                 stage.setMaximized(true);
             }
         });
-
-
-
-        // Admin access hidden button
+                                                                        // Admin access hidden button
         Button hiddenAdminBtn = new Button();
         hiddenAdminBtn.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
         hiddenAdminBtn.setPrefSize(20, 20);
