@@ -10,7 +10,7 @@ import java.util.List;
 
 public class bookTicketScreen {
 
-    //-------------------------------------------------------------------->>>>>> Heading
+            //-------------------------------------------------------------------->>>>>> Heading
     public Scene createBookTicketScene(Stage stage, Scene previousScene, List<String> stationList) {
 
         Label headingLabel = new Label("Select Destination Station");
@@ -57,7 +57,6 @@ public class bookTicketScreen {
         for (char c = 'A'; c <= 'Z' ; c++) {                //<<<<--------- Alphabet Buttons
             char letter = c;                                //<<<<--------- Local final copy
             Button letterBtn = new Button(String.valueOf(c));
-            letterBtn.setPrefWidth(40);
 
             letterBtn.setOnAction(e -> {
                 stationBox.getChildren().clear();
@@ -78,6 +77,7 @@ public class bookTicketScreen {
                             selectedStation[0] = station;
                             fareLabel.setText("Fare: ₹40");
                             continueBtn.setDisable(false);
+                            continueBtn.setStyle("-fx-background-color: #4caf50; -fx-text-fill: white;");
                             System.out.println("Selected Station: " + station);
                         });
                         stationBox.getChildren().add(stationBtn);
@@ -86,7 +86,6 @@ public class bookTicketScreen {
             });
             alphabetPane.getChildren().add(letterBtn);
         }
-
         //-------------------------------------------------------------->>>>>Continue Button action
         continueBtn.setOnAction(e -> {
             if(selectedStation[0] != null){
@@ -101,6 +100,7 @@ public class bookTicketScreen {
 
         Button cancelBtn = new Button("Cancel");
         cancelBtn.setPrefWidth(120);
+        cancelBtn.setStyle("-fx-background-color: #d32f2f; -fx-text-fill: white;");
         cancelBtn.setOnAction(e -> stage.setScene(previousScene));
 
         VBox mainLayout = new VBox(20, headingLabel, alphabetPane, lowerBoxes, cancelBtn);
@@ -109,7 +109,7 @@ public class bookTicketScreen {
 
         VBox.setVgrow(lowerBoxes, Priority.ALWAYS);
 
-        Scene scene = new Scene(mainLayout, 900, 600);
+        Scene scene = new Scene(mainLayout, 900, 500);
         scene.getStylesheets().add("style.css");    //<<<<<<<---------------CSS File Linked here
         return scene;
     }
