@@ -27,7 +27,7 @@ public class welcomeScreen {
 
     public Scene createWelcomeScene(Stage stage) {
 
-        // Load logo
+        //---------------------------------------------------------------------->>>>>> Load logo
         Image logoImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/subway.png")));
         ImageView logoView = new ImageView(logoImg);
         logoView.setPreserveRatio(true);
@@ -39,7 +39,7 @@ public class welcomeScreen {
         HBox titleLeft = new HBox(10, logoView, title);
         titleLeft.setAlignment(Pos.CENTER_LEFT);
 
-        // Load properties
+        //-------------------------------------------------------------------->>>>>> Load properties
         Properties props = new Properties();
         try (InputStream input = getClass().getResourceAsStream("/config.properties")) {
             if (input != null) {
@@ -51,7 +51,7 @@ public class welcomeScreen {
             e.printStackTrace();
         }
 
-        // Language support
+        //---------------------------------------------------------------------->>>>>> Language support
         ComboBox<String> languageSelector = new ComboBox<>();
         languageSelector.getItems().addAll("English", "हिन्दी");
         languageSelector.setValue("English");
@@ -88,7 +88,7 @@ public class welcomeScreen {
         titleBar.setPadding(new Insets(15, 20, 10, 20));
         titleBar.setStyle("-fx-background-color: white;");
 
-        // Clock
+        //---------------------------------------------------------------------->>>>>> Clock
         Label clockLabel = new Label();
         clockLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #555;");
         utils.updateClock(clockLabel);
@@ -125,7 +125,7 @@ public class welcomeScreen {
         tipTimeline.setCycleCount(Timeline.INDEFINITE);
         tipTimeline.play();
 
-        // Buttons
+        //---------------------------------------------------------------------->>>>>> Buttons
         Button bookTicketBtn = new Button("Book Ticket");
         Button rechargeBtn = new Button("Recharge Your Card");
         Button historyBtn = new Button("View History");
@@ -152,7 +152,7 @@ public class welcomeScreen {
         centerLayout.setAlignment(Pos.CENTER);
         centerLayout.setPadding(new Insets(20, 0, 40, 0));
 
-        // Button animations
+        //------------------------------------------------------------------->>>>>> Button animations
         centerLayout.setTranslateY(100);
         centerLayout.setOpacity(0);
 
@@ -169,7 +169,7 @@ public class welcomeScreen {
         ParallelTransition intro = new ParallelTransition(slideIn, fadeButtons);
         intro.play();
 
-                                                                                    // Fade logo/title
+        //-------------------------------------------------------------------->>>>>> Fade logo/title
         FadeTransition fadeLogo = new FadeTransition(Duration.seconds(1), logoView);
         fadeLogo.setFromValue(0);
         fadeLogo.setToValue(1);
@@ -213,7 +213,7 @@ public class welcomeScreen {
         root.setCenter(centerLayout);
         root.setBottom(tickerContainer);
         root.setStyle("-fx-background-color: #F1F8FF;");
-                                                                                    // Language change
+        //-------------------------------------------------------------------->>>>>> Language change
         languageSelector.setOnAction(e -> {
             String lang = languageSelector.getValue();
             Map<String, String> labels = lang.equals("हिन्दी") ? hiLabels : enLabels;
@@ -222,28 +222,28 @@ public class welcomeScreen {
             historyBtn.setText(labels.get("history"));
             exitBtn.setText(labels.get("exit"));
         });
-                                                                                    // Button actions
+        //--------------------------------------------------------------------->>>>>> Button actions
         rechargeBtn.setOnAction(e -> System.out.println("Recharge Clicked"));
         historyBtn.setOnAction(e -> System.out.println("History Clicked"));
         exitBtn.setOnAction(e -> stage.close());
 
         Scene[] welcomeScene = new Scene[1];
         welcomeScene[0] = new Scene(new StackPane(root), 700, 400);
-                                                                                // Book ticket action
+                                                                //<<<<<----------- Book ticket action
         bookTicketBtn.setOnAction(e -> {
             boolean wasMaximized = stage.isMaximized();
 
             Scene bookTicketScene = bookTicketScreen.createBookTicketScene(stage, welcomeScene[0], stationList);
-                                                                                 // Switch scene first
+                                                        //<<<<<<------------------- Switch scene first
             stage.setScene(bookTicketScene);
-                                                // Then immediately re-maximize if it was maximized before
+                            //<<<<<------------ Then immediately re-maximize if it was maximized before
             if (wasMaximized) {
-                                                                // Forcefully request maximize again
-                stage.setMaximized(false);                      // Reset first
+                                                    //<<<<<----------- Forcefully request maximize again
+                stage.setMaximized(false);                      //<<<<<<<<------------ Reset first
                 stage.setMaximized(true);
             }
         });
-                                                                        // Admin access hidden button
+        //--------------------------------------------------------->>>>>> Admin access hidden button
         Button hiddenAdminBtn = new Button();
         hiddenAdminBtn.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
         hiddenAdminBtn.setPrefSize(20, 20);

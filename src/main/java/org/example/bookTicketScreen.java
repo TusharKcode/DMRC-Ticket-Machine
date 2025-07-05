@@ -1,153 +1,80 @@
 package org.example;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
-import javafx.util.Duration;
-
-import java.net.URL;
 import java.util.List;
+
 
 public class bookTicketScreen {
 
-    public Scene createBookTicketScene(Stage stage, Scene welcomeScene, List<String> stationList) {
-        Label bookTitle = new Label("DMRC Ticket Machine");
-        bookTitle.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
+    private final FlowPane stationBox = new FlowPane();
 
-        Label bookClock = new Label();
-        bookClock.setStyle("-fx-font-size: 14px;");
-        utils.updateClock(bookClock);
+    public Scene createBookTicketScene(Stage stage, Scene previousScene, List<String> stationList) {
 
-        Timeline bookClockTimeline = new Timeline(new KeyFrame(Duration.seconds(1), e2 ->
-                utils.updateClock(bookClock)));
-        bookClockTimeline.setCycleCount(Timeline.INDEFINITE);
-        bookClockTimeline.play();
+        Label titleLabel = new Label("Select Destination Station");
+        titleLabel.setStyle("-fx-font-size: 22px; -fx-font-weight: bold;");
 
-        HBox bookTitleBar = new HBox(20, bookTitle, bookClock);
-        bookTitleBar.setPadding(new Insets(15,20,10,20));
-        bookTitleBar.setAlignment(Pos.CENTER_LEFT);
-        bookTitleBar.setStyle("-fx-background-color: white;");
+        HBox alphabetBox = new HBox(5);
+        alphabetBox.setAlignment(Pos.CENTER);
 
-        VBox header = new VBox(bookTitleBar);
-
-        Label fromLabel = new Label("From Station:");
-        ComboBox<String> fromComboBox = new ComboBox<>();
-        fromComboBox.getItems().addAll(stationList);
-        fromComboBox.setPromptText("Select From");
-
-        VBox fromBox = new VBox(10, fromLabel, fromComboBox);
-        fromBox.setAlignment(Pos.CENTER);
-        fromBox.setPadding(new Insets(10));
-        fromBox.setStyle("-fx-background-color: #F5F5F5; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-background-radius: 5;");
-        fromBox.setPrefWidth(250);
-
-        Label toLabel = new Label("To Station:");
-        ComboBox<String> toComboBox = new ComboBox<>();
-        toComboBox.getItems().addAll(stationList);
-        toComboBox.setPromptText("Select To");
-
-        VBox toBox = new VBox(10, toLabel, toComboBox);
-        toBox.setAlignment(Pos.CENTER);
-        toBox.setPadding(new Insets(10));
-        toBox.setStyle("-fx-background-color: #F5F5F5; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-background-radius: 5;");
-        toBox.setPrefWidth(250);
-
-        HBox centerBox = new HBox(30, fromBox, toBox);
-        centerBox.setAlignment(Pos.CENTER);
-        centerBox.setPadding(new Insets(20));
-
-        Label distanceLabel = new Label("Distance: 0 km");
-        Label fareLabel = new Label("Fare: ₹0");
-        fareLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: green;");
-
-        HBox infoBox = new HBox(40, distanceLabel, fareLabel);
-        infoBox.setAlignment(Pos.CENTER);
-        infoBox.setPadding(new Insets(10));
-
-        Button confirmBtn = new Button("Confirm");
-        Button backBtn = new Button("Back");
-
-        HBox buttonBox = new HBox(30, confirmBtn, backBtn);
-        buttonBox.setAlignment(Pos.CENTER);
-        buttonBox.setPadding(new Insets(15));
-
-        fromComboBox.setOnAction(ev -> updateFareAndDistance(fromComboBox, toComboBox, fareLabel, distanceLabel));
-        toComboBox.setOnAction(ev -> updateFareAndDistance(fromComboBox, toComboBox, fareLabel, distanceLabel));
-                                                                                //Confirm Button here
-        confirmBtn.setOnAction(ev -> {
-            String fromStation = fromComboBox.getValue();
-            String toStation = toComboBox.getValue();
-
-            if(fromStation != null && toStation !=  null && !fromStation.equals(toStation)){
-                int fromIndex = fromComboBox.getItems().indexOf(fromStation);
-                int toIndex = toComboBox.getItems().indexOf(toStation);
-                int fare = Math.abs(fromIndex - toIndex) * 10 + 5;
-
-                appData.ticketIssued++;                                             //Update App Data
-                appData.totalBalance += fare;
-
-                                                                                        //Add Log Entry
-                String logEntry = "Ticket booked from " + fromStation + " to " + toStation + " | Fare: ₹" + fare;
-                appData.logs.add(logEntry);
-                System.out.println("Ticket Booked! Total tickets: " + appData.ticketIssued +
-                        "Total Balance: ₹" + appData.totalBalance);
-
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Ticket Booked!");
-                alert.setHeaderText(null);
-                alert.setContentText("Ticket Booked Successfully!\n Fare: ₹" + fare);
-                alert.showAndWait();
-            } else {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Invalid Selection");
-                alert.setHeaderText(null);
-                alert.setContentText("Please select valid From and To station");
-                alert.showAndWait();
+        for (char c = 'A'; c <= 'Z' ; c++) {
+            char letter = c;                                //<<<<--------- Local final copy
+            Button letterBtn = new Button(String.valueOf(c));
+            letterBtn.setOnAction(e-> updateStationButtons(stationList, String.valueOf(letter)));
+            letterBtn.setPrefWidth(30);
+            alphabetBox.getChildren().add(letterBtn);
             }
-        });
 
-        backBtn.setOnAction(ev -> {
+        stationBox.setPadding(new Insets(10));
+        stationBox.setHgap(10);
+        stationBox.setVgap(10);
+        stationBox.setPrefWrapLength(400);
+        stationBox.setAlignment(Pos.CENTER);
+
+        updateStationButtons(stationList, "A");
+
+        Button backBtn = new Button("Back");
+        backBtn.setPrefWidth(120);
+        backBtn.setOnAction(e -> {
             boolean wasMaximized = stage.isMaximized();
-            stage.setScene(welcomeScene);
-            if (wasMaximized) {
+            stage.setScene(previousScene);
+            if(wasMaximized){
                 stage.setMaximized(false);
                 stage.setMaximized(true);
             }
         });
 
-        VBox mainLayout = new VBox(20, header, centerBox, infoBox, buttonBox);
+        VBox mainLayout = new VBox(titleLabel, alphabetBox, stationBox, backBtn);
         mainLayout.setAlignment(Pos.TOP_CENTER);
-        mainLayout.setPadding(new Insets(10));
+        mainLayout.setPadding(new Insets(20));
 
-        Scene bookScene = new Scene(mainLayout, 700, 500);
-
-        URL cssURL = getClass().getResource("/style.css");
-        if (cssURL != null) {
-            bookScene.getStylesheets().add(cssURL.toExternalForm());
-        }
-        return bookScene;
+        return new Scene(mainLayout, 700, 500);
     }
 
-    private void updateFareAndDistance(ComboBox<String> from, ComboBox<String> to, Label fareLabel, Label distanceLabel) {
-        String fromStation = from.getValue();
-        String toStation = to.getValue();
+    private void updateStationButtons(List<String> stationList, String letter){
+        stationBox.getChildren().clear();
 
-        if (fromStation != null && toStation != null && !fromStation.equals(toStation)) {
-            int fromIndex = from.getItems().indexOf(fromStation);
-            int toIndex = to.getItems().indexOf(toStation);
-            int distance = Math.abs(fromIndex - toIndex) * 2;
-            int fare = Math.abs(fromIndex - toIndex) * 10 + 5;
+        List<String> filteredStations = stationList.stream()
+                .filter(name -> name.toUpperCase().startsWith(letter.toUpperCase()))
+                .toList();
 
-            fareLabel.setText("Fare: ₹" + fare);
-            distanceLabel.setText("Distance: " + distance + " km");
+        if(filteredStations.isEmpty()){
+            Label noStations = new Label("No Stations of this Letter: " + letter);
+            noStations.setStyle("-fx-text-fill: red;");
+            stationBox.getChildren().add(noStations);
         } else {
-            fareLabel.setText("Fare: ₹0");
-            distanceLabel.setText("Distance: 0 km");
+            for(String station : filteredStations){
+                Button stationBtn = new Button(station);
+                stationBtn.setPrefWidth(150);
+                stationBtn.setOnAction(e -> {
+                    System.out.println("Selected Station: " + station);
+                });
+                stationBox.getChildren().add(stationBtn);
+            }
         }
     }
 }
