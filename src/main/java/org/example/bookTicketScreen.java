@@ -8,73 +8,93 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import java.util.List;
 
-
 public class bookTicketScreen {
 
-    private final FlowPane stationBox = new FlowPane();
-
+    //-------------------------------------------------------------------->>>>>> Heading
     public Scene createBookTicketScene(Stage stage, Scene previousScene, List<String> stationList) {
 
-        Label titleLabel = new Label("Select Destination Station");
-        titleLabel.setStyle("-fx-font-size: 22px; -fx-font-weight: bold;");
+        Label headingLabel = new Label("Select Destination Station");
+        headingLabel.setStyle("-fx-font-size: 22px; -fx-font-weight: bold;");
 
-        HBox alphabetBox = new HBox(5);
-        alphabetBox.setAlignment(Pos.CENTER);
+        //-------------------------------------------------------------------->>>>>>Alphabet Area
+        FlowPane alphabetPane = new FlowPane();
+        alphabetPane.setVgap(5);
+        alphabetPane.setHgap(5);
+        alphabetPane.setAlignment(Pos.CENTER);
 
-        for (char c = 'A'; c <= 'Z' ; c++) {
+        //-------------------------------------------------------------------->>>>>> Station List
+        VBox stationBox = new VBox();
+        stationBox.setPadding(new Insets(10));
+        stationBox.setSpacing(5);
+        stationBox.setPrefWidth(250);
+        stationBox.setStyle("-fx-border-color: gray; -fx-border-width: 1px; -fx-background-color: #f9f9f9;");
+
+        Label stationPlaceholder = new Label("Select an Alphabet to see Stations");
+        stationBox.getChildren().add(stationPlaceholder);
+
+        //-------------------------------------------------------------------->>>>>> Fare Box
+        VBox fareBox = new VBox(10);
+        fareBox.setPadding(new Insets(10));
+        fareBox.setStyle("-fx-border-color: gray; -fx-border-width: 1px; -fx-background-color: #f0f8ff;");
+        fareBox.setPrefWidth(200);
+
+        Label fareLabel = new Label("Fare: ₹0");
+        Button continueBtn = new Button("Continue to Payment");
+        fareBox.getChildren().addAll(fareLabel, continueBtn);
+
+        final String[] selectedStation = {null};            //<<<<------- Store selected station
+
+        for (char c = 'A'; c <= 'Z' ; c++) {                //<<<<--------- Alphabet Buttons
             char letter = c;                                //<<<<--------- Local final copy
             Button letterBtn = new Button(String.valueOf(c));
-            letterBtn.setOnAction(e-> updateStationButtons(stationList, String.valueOf(letter)));
-            letterBtn.setPrefWidth(30);
-            alphabetBox.getChildren().add(letterBtn);
-            }
+            letterBtn.setPrefWidth(40);
 
-        stationBox.setPadding(new Insets(10));
-        stationBox.setHgap(10);
-        stationBox.setVgap(10);
-        stationBox.setPrefWrapLength(400);
-        stationBox.setAlignment(Pos.CENTER);
+            letterBtn.setOnAction(e -> {
+                stationBox.getChildren().clear();
 
-        updateStationButtons(stationList, "A");
+                List<String> filteredStations = stationList.stream()
+                        .filter(name -> name.toUpperCase().startsWith(String.valueOf(letter)))
+                        .toList();
 
-        Button backBtn = new Button("Back");
-        backBtn.setPrefWidth(120);
-        backBtn.setOnAction(e -> {
-            boolean wasMaximized = stage.isMaximized();
-            stage.setScene(previousScene);
-            if(wasMaximized){
-                stage.setMaximized(false);
-                stage.setMaximized(true);
+                if(filteredStations.isEmpty()){
+                    Label noStations = new Label("No Stations of this Letter: " + letter);
+                    noStations.setStyle("-fx-text-fill: red;");
+                    stationBox.getChildren().add(noStations);
+                } else {
+                    for(String station : filteredStations){
+                        Button stationBtn = new Button(station);
+                        stationBtn.setPrefWidth(200);
+                        stationBtn.setOnAction(ev -> {
+                            selectedStation[0] = station;
+                            fareLabel.setText("Fare: ₹40");
+                            continueBtn.setDisable(false);
+                            System.out.println("Selected Station: " + station);
+                        });
+                        stationBox.getChildren().add(stationBtn);
+                    }
+                }
+            });
+            alphabetPane.getChildren().add(letterBtn);
+        }
+
+        //-------------------------------------------------------------->>>>>Continue Button action
+        continueBtn.setOnAction(e -> {
+            if(selectedStation[0] != null){
+                System.out.println("Proceeding with: " + selectedStation[0]);
             }
         });
 
-        VBox mainLayout = new VBox(titleLabel, alphabetBox, stationBox, backBtn);
+        HBox lowerBoxes = new HBox(20, stationBox, fareBox);
+        lowerBoxes.setAlignment(Pos.CENTER);
+
+        Button cancelBtn = new Button("Cancel");
+        cancelBtn.setPrefWidth(120);
+        cancelBtn.setOnAction(e -> stage.setScene(previousScene));
+
+        VBox mainLayout = new VBox(20, headingLabel, alphabetPane, lowerBoxes, cancelBtn);
         mainLayout.setAlignment(Pos.TOP_CENTER);
         mainLayout.setPadding(new Insets(20));
 
-        return new Scene(mainLayout, 700, 500);
-    }
-
-    private void updateStationButtons(List<String> stationList, String letter){
-        stationBox.getChildren().clear();
-
-        List<String> filteredStations = stationList.stream()
-                .filter(name -> name.toUpperCase().startsWith(letter.toUpperCase()))
-                .toList();
-
-        if(filteredStations.isEmpty()){
-            Label noStations = new Label("No Stations of this Letter: " + letter);
-            noStations.setStyle("-fx-text-fill: red;");
-            stationBox.getChildren().add(noStations);
-        } else {
-            for(String station : filteredStations){
-                Button stationBtn = new Button(station);
-                stationBtn.setPrefWidth(150);
-                stationBtn.setOnAction(e -> {
-                    System.out.println("Selected Station: " + station);
-                });
-                stationBox.getChildren().add(stationBtn);
-            }
-        }
+        return new Scene(mainLayout, 800, 500);
     }
 }
