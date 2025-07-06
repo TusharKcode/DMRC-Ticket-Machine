@@ -18,8 +18,9 @@ This is a desktop application simulating a DMRC Metro Station Ticket Machine, al
 - JavaFX 21
 - IntelliJ IDEA (Build System: IntelliJ / Gradle)
 - Gradle for dependency management
+- MySQL (for dynamic station data)
 - (Optional) ZXing for QR Generation
-- (Optional) SQLite for Data Storage
+- (Planned) SQLite for ticket & transaction storage
 
 ---
 
@@ -30,10 +31,12 @@ src/
       ├── java/
       │   └── org/
       │       └── dmrc/
-      │           ├── Main.java            <-- Application launcher & scene management
-      │           ├── WelcomeScreen.java   <-- Welcome screen UI and logic
+      │           ├── Main.java             <-- Application launcher & scene management
+      │           ├── WelcomeScreen.java    <-- Welcome screen UI and logic
       │           └── BookTicketScreen.java <-- Book Ticket screen logic
-      │
+      │           ├── Station.java          <-- Station model class
+      │           └── StationDAO.java       <-- Data access object for MySQL station handling
+      │ 
       └── resources/
       ├── style.css          <-- Custom CSS styling for modern look
       ├── config.properties  <-- Station name & terminal ID config
@@ -46,65 +49,80 @@ src/
 
 1. Clone the repo
 2. Open in IntelliJ
-3. Ensure Java 17 & JavaFX SDK are configured
-4. Run `Main.java`
-
----
-
-## Planned Features
-
-- [ ] Ticket generation with QR
-- [ ] Card recharge simulation (with balance updates)
-- [ ] View travel/ticket history screen
-- [ ] Data persistence using SQLite for transactions
+3. Make sure your MySQL database is set up and running (stations table created and filled)
+4. Update DB config in `DBUtil.java` if needed
+5. Ensure Java 17 & JavaFX SDK are configured
+6. Run `Main.java`
 
 ---
 
 ## Features Completed:
 
-- JavaFX Project setup with Gradle & JDK 17
-- Welcome Screen UI with:
+- **JavaFX Project setup with Gradle & JDK 17**
+- **Welcome Screen UI with:**
     - **Station name & Terminal ID** fetched dynamically from `config.properties`
-    - Real-time clock displayed at the bottom
+    - Real-time clock
     - Top header with DMRC logo, title, station info, and language selector
-    - Four modern buttons in 2x2 layout:
+    - Four modern buttons:
         - Book Ticket
         - Recharge Card
         - View History
         - Exit
-    - Fully styled using `style.css`
     - Ticker (announcement bar) with scrolling bilingual news/messages
-    - Metro line animated illustration with current station highlight
     - Modern 2x2 layout for buttons: Book Ticket, Recharge, History, Exit
     - Multi-language support toggle (English/Hindi)
     - Metro tips section updating dynamically
-    - Animated transitions on startup
+    - Animated transitions on startup (sliding, fading)
     - Hidden Admin Panel access (Ctrl+Alt+A or corner button)
     - Stable UI size on maximizing and switching screens
 
 - **Book Ticket Screen**:
-    - Reuses header and live clock for consistency
-    - From and To station dropdowns with modern card-style layout
-    - Dynamic fare and distance calculation
-    - Modern, card-like layout with clean styling
-    - Smooth transition back to welcome screen with stable stage size
-    - Modular CSS styling (`style.css`) for unified design
-    - Basic admin login window (username & password check)
+  - Alphabet-based filtering buttons to show stations starting with selected letter
+  - Station list dynamically fetched from MySQL database (using `StationDAO`)
+  - Scrollable station selection area with responsive design
+  - Fare preview and continue button that updates after selection
+  - Cancel button to return to welcome screen (styled in red)
+  - Modern card-like design and consistent styling
+  - Prepared to handle large numbers of stations (future-proof)
+
+- **Database Integration:**
+  - Created `stations` table with sample stations
+  - Plan to group stations by line color (yellow, blue, green, etc.)
+  - Fetching station list dynamically instead of hardcoding
+  - `Station.java` model and `StationDAO.java` for DB access
+  - Error handling and logging improvements
+
+- **Admin Panel:**
+  - Basic admin login window with username/password check
+  - Hidden corner button and keyboard shortcut
+---
+
+## Planned / In Progress
+
+- Ticket QR code generation and printing (using ZXing)
+- Metro card recharge simulation with virtual balance and database updates
+- Travel/ticket history screen with data fetched from DB
+- SQLite integration for storing tickets, transactions, and user actions
+- Advanced fare calculation logic based on distance or station line
+- Show stations by line color or section when needed (design ready)
+
 ---
 
 ## Code Architecture
 
-- Separated Java files (`WelcomeScreen.java, BookTicketScreen.java`) for better modularity and maintainability
-- Shared styling and configurations
+- Modular design: separate screens (`WelcomeScreen`, `BookTicketScreen`), DB handling (`StationDAO`), and model (`Station`)
+- Dynamic station data: no hardcoded station list, everything from DB
+- Shared CSS (`style.css`) for unified styling and animations
+- Properties file (`config.properties`) to update station or terminal info without code changes
 
 ---
-## Planned / In Progress
 
-- QR code generation for booked tickets
-- Metro card recharge simulation with virtual balance
-- View travel/ticket history screen
-- SQLite integration for local storage of tickets and transactions
-- Admin panel diagnostics & reports
+## Known Issues & Improvements
+
+- MySQL connector dependency security warnings (we plan to update when a new stable version is available)
+- Improve DB error message UX (e.g., dialogs instead of console logs)
+- Add more real stations from DMRC lines into DB
+
 
 ---
 
