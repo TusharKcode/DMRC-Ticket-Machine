@@ -12,7 +12,6 @@ public class bookTicketScreen {
 
             //-------------------------------------------------------------------->>>>>> Heading
     public Scene createBookTicketScene(Stage stage, Scene previousScene) {
-
         Label headingLabel = new Label("Select Destination Station");
         headingLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
 

@@ -13,6 +13,8 @@ dependencies {
 
     implementation "org.openjfx:javafx-controls:$javaFxVersion"
     implementation "org.openjfx:javafx-fxml:$javaFxVersion"
+
+    implementation 'mysql:mysql-connector-java:8.0.33'
 }
 
 javafx {
