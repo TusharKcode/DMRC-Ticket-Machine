@@ -11,7 +11,7 @@ import java.util.List;
 public class bookTicketScreen {
 
             //-------------------------------------------------------------------->>>>>> Heading
-    public Scene createBookTicketScene(Stage stage, Scene previousScene, List<String> stationList) {
+    public Scene createBookTicketScene(Stage stage, Scene previousScene) {
 
         Label headingLabel = new Label("Select Destination Station");
         headingLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
@@ -54,6 +54,10 @@ public class bookTicketScreen {
 
         final String[] selectedStation = {null};            //<<<<------- To hold selected station
 
+        //------------------------------------------------------------------>>>>>>>>Load Stations
+        StationDAO dao = new StationDAO();
+        List<Station> stationList = dao.getAllStations();
+
         for (char c = 'A'; c <= 'Z' ; c++) {                //<<<<--------- Alphabet Buttons
             char letter = c;                                //<<<<--------- Local final copy
             Button letterBtn = new Button(String.valueOf(c));
@@ -61,8 +65,8 @@ public class bookTicketScreen {
             letterBtn.setOnAction(e -> {
                 stationBox.getChildren().clear();
 
-                List<String> filteredStations = stationList.stream()
-                        .filter(name -> name.toUpperCase().startsWith(String.valueOf(letter)))
+                List<Station> filteredStations = stationList.stream()
+                        .filter(s -> s.getName().toUpperCase().startsWith(String.valueOf(letter)))
                         .toList();
 
                 if(filteredStations.isEmpty()){
@@ -70,20 +74,21 @@ public class bookTicketScreen {
                     noStations.setStyle("-fx-text-fill: red;");
                     stationBox.getChildren().add(noStations);
                 } else {
-                    for(String station : filteredStations){
-                        Button stationBtn = new Button(station);
+                    for(Station s : filteredStations){
+                        Button stationBtn = new Button(s.getName() + " ( " + s.getLine() + " ) " );
                         stationBtn.setPrefWidth(200);
                         stationBtn.setOnAction(ev -> {
-                            selectedStation[0] = station;
+                            selectedStation[0] = s.getName();
                             fareLabel.setText("Fare: ₹40");
                             continueBtn.setDisable(false);
                             continueBtn.setStyle("-fx-background-color: #4caf50; -fx-text-fill: white;");
-                            System.out.println("Selected Station: " + station);
+                            System.out.println("Selected Station: " + s.getName());
                         });
                         stationBox.getChildren().add(stationBtn);
                     }
                 }
             });
+            letterBtn.setStyle("-fx-background-color: #1976d2; -fx-text-fill: white;");
             alphabetPane.getChildren().add(letterBtn);
         }
         //-------------------------------------------------------------->>>>>Continue Button action

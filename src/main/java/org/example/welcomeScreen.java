@@ -22,10 +22,7 @@ public class welcomeScreen {
     private final adminLogin adminLogin = new adminLogin();
     private final bookTicketScreen bookTicketScreen = new bookTicketScreen();
 
-    private final List<String> stationList = Arrays.asList("Dwarka", "Dwarka Mod", "Nawada", "Uttam Nagar East", "Uttam Nagar West",
-            "Janakpuri West", "Janakpuri East", "Rajouri Garden", "Karol Bagh", "Rajiv Chowk");
-
-    public Scene createWelcomeScene(Stage stage) {
+        public Scene createWelcomeScene(Stage stage) {
 
         //---------------------------------------------------------------------->>>>>> Load logo
         Image logoImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/subway.png")));
@@ -233,7 +230,7 @@ public class welcomeScreen {
         bookTicketBtn.setOnAction(e -> {
             boolean wasMaximized = stage.isMaximized();
 
-            Scene bookTicketScene = bookTicketScreen.createBookTicketScene(stage, welcomeScene[0], stationList);
+            Scene bookTicketScene = bookTicketScreen.createBookTicketScene(stage, welcomeScene[0]);
                                                         //<<<<<<------------------- Switch scene first
             stage.setScene(bookTicketScene);
                             //<<<<<------------ Then immediately re-maximize if it was maximized before
