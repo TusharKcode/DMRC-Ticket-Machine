@@ -103,7 +103,7 @@ public class bookTicketScreen {
                         stationLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: normal;");
 
                         stationItem.getChildren().addAll(colorCircle, stationLabel);
-                        stationItem.setOnMouseEntered(ev -> {
+                        stationItem.setOnMouseEntered(ev ->
                             stationItem.setStyle(
                                     "-fx-background-color: #e3f2fd;" + // light blue on hover
                                             "-fx-border-radius: 8;" +
@@ -112,11 +112,9 @@ public class bookTicketScreen {
                                             "-fx-border-width: 1;" +
                                             "-fx-effect: dropshadow(three-pass-box, " +
                                             "rgba(0,0,0,0.1), 5, 0, 0, 2);"
-                            );
-                        });
+                            ));
 
-                        stationItem.setOnMouseExited(ev -> {
-                            stationItem.setStyle(
+                        stationItem.setOnMouseExited(ev -> stationItem.setStyle(
                                     "-fx-background-color: #ffffff;" +
                                             "-fx-border-radius: 8;" +
                                             "-fx-background-radius: 8;" +
@@ -124,8 +122,7 @@ public class bookTicketScreen {
                                             "-fx-border-width: 1;" +
                                             "-fx-effect: dropshadow(three-pass-box, " +
                                             "rgba(0,0,0,0.05), 5, 0, 0, 2);"
-                            );
-                        });
+                        ));
 
                         stationItem.setOnMouseClicked(ev -> {
                             selectedStation[0] = s.getName();
