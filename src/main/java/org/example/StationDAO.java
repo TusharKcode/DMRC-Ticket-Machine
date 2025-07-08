@@ -21,9 +21,8 @@ public class StationDAO {
                 Station station = new Station(
                         rs.getInt("id"),
                         rs.getString("name"),
-                        rs.getString("line"),
-                        rs.getString("color")
-                );
+                        rs.getString("line_color")
+                        );
                 stations.add(station);
             }
         } catch (SQLException e){

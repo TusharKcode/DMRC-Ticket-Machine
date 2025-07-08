@@ -3,14 +3,14 @@ package org.example;
 public class Station {
     private final int id;
     private final String name;
-    private final String line;
-    private final String color;
+    private final String lineColor;
 
-    public Station(int id, String name, String line, String color){
+
+    public Station(int id, String name, String lineColor){
         this.id = id;
         this.name = name;
-        this.line = line;
-        this.color = color;
+        this.lineColor = lineColor;
+
     }
 
     public int getId() {
@@ -22,15 +22,11 @@ public class Station {
     }
 
     public String getLine() {
-        return line;
-    }
-
-    public String getColor() {
-        return color;
+        return lineColor;
     }
 
     @Override
     public String toString(){
-        return name + " ( " + line + " ) ";
+        return name;
     }
 }

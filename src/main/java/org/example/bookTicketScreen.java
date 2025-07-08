@@ -5,6 +5,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import java.util.List;
 
@@ -74,16 +76,65 @@ public class bookTicketScreen {
                     stationBox.getChildren().add(noStations);
                 } else {
                     for(Station s : filteredStations){
-                        Button stationBtn = new Button(s.getName() + " ( " + s.getLine() + " ) " );
-                        stationBtn.setPrefWidth(200);
-                        stationBtn.setOnAction(ev -> {
+                        HBox stationItem = new HBox(10);
+                        stationItem.setAlignment(Pos.CENTER_LEFT);
+                        stationItem.setStyle("-fx-background-color: #ffffff;" +
+                                "-fx-border-radius: 8;" +
+                                "-fx-background-radius: 8;" +
+                                "-fx-border-color: #e0e0e0;" +
+                                "-fx-border-width: 1;" +
+                                "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 5, 0, 0, 2);");
+                        stationItem.setPadding(new Insets(8));
+
+                        Circle colorCircle = new Circle(8);
+                        // Check and set safe color
+                        String colorString = s.getLine();
+                        if (colorString == null || colorString.isEmpty()) {
+                            colorString = "#808080"; // default gray
+                        }
+                        try {
+                            colorCircle.setFill(Color.web(colorString, 1.0));
+                        } catch (IllegalArgumentException ex) {
+                            // fallback if invalid color value
+                            colorCircle.setFill(Color.GRAY);
+                        }
+
+                        Label stationLabel = new Label(s.getName());
+                        stationLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: normal;");
+
+                        stationItem.getChildren().addAll(colorCircle, stationLabel);
+                        stationItem.setOnMouseEntered(ev -> {
+                            stationItem.setStyle(
+                                    "-fx-background-color: #e3f2fd;" + // light blue on hover
+                                            "-fx-border-radius: 8;" +
+                                            "-fx-background-radius: 8;" +
+                                            "-fx-border-color: #64b5f6;" +
+                                            "-fx-border-width: 1;" +
+                                            "-fx-effect: dropshadow(three-pass-box, " +
+                                            "rgba(0,0,0,0.1), 5, 0, 0, 2);"
+                            );
+                        });
+
+                        stationItem.setOnMouseExited(ev -> {
+                            stationItem.setStyle(
+                                    "-fx-background-color: #ffffff;" +
+                                            "-fx-border-radius: 8;" +
+                                            "-fx-background-radius: 8;" +
+                                            "-fx-border-color: #e0e0e0;" +
+                                            "-fx-border-width: 1;" +
+                                            "-fx-effect: dropshadow(three-pass-box, " +
+                                            "rgba(0,0,0,0.05), 5, 0, 0, 2);"
+                            );
+                        });
+
+                        stationItem.setOnMouseClicked(ev -> {
                             selectedStation[0] = s.getName();
                             fareLabel.setText("Fare: ₹40");
                             continueBtn.setDisable(false);
                             continueBtn.setStyle("-fx-background-color: #4caf50; -fx-text-fill: white;");
                             System.out.println("Selected Station: " + s.getName());
                         });
-                        stationBox.getChildren().add(stationBtn);
+                        stationBox.getChildren().add(stationItem);
                     }
                 }
             });
