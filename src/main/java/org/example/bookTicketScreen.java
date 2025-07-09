@@ -59,6 +59,9 @@ public class bookTicketScreen {
         StationDAO dao = new StationDAO();
         List<Station> stationList = dao.getAllStations();
 
+        double fareBase = 10.0;
+        double perKmRate = 2.0;
+
         for (char c = 'A'; c <= 'Z' ; c++) {                //<<<<--------- Alphabet Buttons
             char letter = c;                                //<<<<--------- Local final copy
             Button letterBtn = new Button(String.valueOf(c));
@@ -126,10 +129,15 @@ public class bookTicketScreen {
 
                         stationItem.setOnMouseClicked(ev -> {
                             selectedStation[0] = s.getName();
-                            fareLabel.setText("Fare: ₹40");
+
+                            double distance = s.getDistanceFromOrigin();
+                            double calculatedFare = fareBase + (distance * perKmRate);
+                            int  roundedfare = (int) Math.round(calculatedFare);
+
+                            fareLabel.setText("Fare: ₹" + roundedfare);
                             continueBtn.setDisable(false);
                             continueBtn.setStyle("-fx-background-color: #4caf50; -fx-text-fill: white;");
-                            System.out.println("Selected Station: " + s.getName());
+                            System.out.println("Selected Station: " + s.getName() + ", Distance: " + distance + "km, Fare: ₹" + roundedfare);
                         });
                         stationBox.getChildren().add(stationItem);
                     }

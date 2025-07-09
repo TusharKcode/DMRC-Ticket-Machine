@@ -18,16 +18,34 @@ public class StationDAO {
             ResultSet rs = stmt.executeQuery(sql)){
 
             while(rs.next()){
+                String name = rs.getString("name");
+                double distance;
+
+                switch (name){
+                    case "AIIMS" -> distance = 8.0;
+                    case "Rajiv Chowk" -> distance = 0.0;
+                    case "Green Park" -> distance = 6.0;
+                    case "Dwarka Sector 21" -> distance = 22.0;
+                    case "Central Secretariat" -> distance = 2.0;
+                    case "HUDA City Centre" -> distance = 28.0;
+                    case "Noida City Centre" -> distance = 25.0;
+                    // Add more stations as needed
+                    default -> distance = 5.0; // Default fallback distance
+                }
+
                 Station station = new Station(
                         rs.getInt("id"),
-                        rs.getString("name"),
-                        rs.getString("line_color")
+                        name,
+                        rs.getString("line_color"),
+                        distance
                         );
+
                 stations.add(station);
             }
         } catch (SQLException e){
             LOGGER.log(Level.SEVERE, "Database Error", e);
         }
         return stations;
+
     }
 }
