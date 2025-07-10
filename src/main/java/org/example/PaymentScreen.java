@@ -4,18 +4,17 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class PaymentScreen {
-    private String originStation;
-    private String destinationStation;
-    private double fare;
+    private final String originStation;
+    private final String destinationStation;
+    private final double fare;
 
-    public paymentScreen(String originStation, String destinationStation, double fare){
+    public PaymentScreen(String originStation, String destinationStation, double fare){
         this.originStation = originStation;
         this.destinationStation = destinationStation;
         this.fare = fare;
