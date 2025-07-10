@@ -21,7 +21,7 @@ public class PaymentScreen {
     }
     public Scene createPaymentScreen(Stage stage, Scene previousScene){
         Label headingLabel = new Label("Confirm to Payment");
-        headingLabel.setStyle("-fx-font-size: 24px, -fx-font-weight: bold");
+        headingLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
 
         //<<<<<<-----------------------------------------------------------------Ticket Summary
         VBox ticketBox = new VBox(5);
