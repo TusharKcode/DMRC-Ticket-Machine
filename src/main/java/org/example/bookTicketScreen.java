@@ -149,7 +149,15 @@ public class bookTicketScreen {
         //-------------------------------------------------------------->>>>>Continue Button action
         continueBtn.setOnAction(e -> {
             if(selectedStation[0] != null){
-                System.out.println("Proceeding with: " + selectedStation[0]);
+                String originStation = "Dwarka";
+                String destinationStation = selectedStation[0];
+
+                String fareText = fareLabel.getText().replace("Fare: ₹", "").trim();
+                double fare = Double.parseDouble(fareText);
+
+                PaymentScreen paymentScreen = new PaymentScreen(originStation, destinationStation, fare);
+                Scene payScene = paymentScreen.createPaymentScreen(stage, previousScene);
+                stage.setScene(payScene);
             }
         });
 
