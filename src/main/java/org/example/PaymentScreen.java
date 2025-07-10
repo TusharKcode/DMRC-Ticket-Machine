@@ -52,7 +52,7 @@ public class PaymentScreen {
         qrView.setFitHeight(150);
         qrView.setVisible(false);
 
-        Image qrImage = new Image("");
+        Image qrImage = new Image("https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=DMRC_Payment");
         qrView.setImage(qrImage);
         //<<<<<---------------------------------------------------------------------Cancel Button
         Button cancelBtn = new Button("Cancel");
