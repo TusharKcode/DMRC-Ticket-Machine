@@ -44,19 +44,21 @@ public class PaymentScreen {
 
         summaryBox.getChildren().addAll(formLabel, toLabel, fareLabel);
 
-        //<<<<<<-----------------------------------------------------------------Payment options
+        //<<<<<<-----------------------------------------------------------------Buttons
         Button cashBtn = new Button("Cash");
         Button onlineBtn = new Button("Online");
-
-        //<<<<<---------------------------------------------------------------------Pay Button
         Button payBtn = new Button("Pay");
-        payBtn.setPrefWidth(120);
+        Button cancelBtn = new Button("Cancel");
+
+        stylePrimaryButton(cashBtn);
+        stylePrimaryButton(onlineBtn);
+        //<<<<<---------------------------------------------------------------------Pay Button
+
         payBtn.setStyle("-fx-background-color: #90caf9; -fx-text-fill: white; -fx-background-radius: 10;");
         payBtn.setDisable(true); //<<<<<---------After choosing payment option, this button will enable.
 
         //<<<<<---------------------------------------------------------------------Cancel Button
-        Button cancelBtn = new Button("Cancel");
-        cancelBtn.setPrefWidth(120);
+
         cancelBtn.setStyle("-fx-background-color: #d32f2f; -fx-text-fill: white; -fx-background-radius: 10;");
 
         //<<<<<---------------------------------------------------------------------Payment Mode Logic
@@ -77,13 +79,7 @@ public class PaymentScreen {
         //<<<<<---------------------------------------------------------------------Pay Button Logic
         payBtn.setOnAction(e -> {
            if(selectedMode[0] != null){
-               Alert alert = new Alert(Alert.AlertType.INFORMATION);
-               alert.setTitle("Payment Successful");
-               alert.setHeaderText(null);
-               alert.setContentText(" ₹ " + (int) fare + " payment succeeded using " + selectedMode[0] + "mode.");
-               alert.showAndWait();
-
-               stage.setScene(previousScene);
+               showSuccessPopup();
            }
         });
         cancelBtn.setOnAction(e -> stage.setScene(previousScene));
@@ -103,6 +99,12 @@ public class PaymentScreen {
         Scene scene = new Scene(mainBox,500, 500);
         return scene;
     }
+    private void stylePrimaryButton(Button button){
+        button.setStyle("-fx-background-color: #1976d2; -fx-background-radius: 10; -fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: white; -fx-cursor: hand;");
+        button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: #1565c0; -fx-background-radius: 10; -fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: white; -fx-cursor: hand;"));
+        button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #1976d2; -fx-background-radius: 10; -fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: white; -fx-cursor: hand;"));
+    }
+
     private void showQRCodePopup(){
         Stage qrStage = new Stage();
         VBox box = new VBox(10);
@@ -125,6 +127,7 @@ public class PaymentScreen {
         qrStage.setScene(scene);
         qrStage.show();
     }
+
     private void showSuccessPopup(){
         Stage successStage = new Stage();
         VBox box = new VBox(15);
