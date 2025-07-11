@@ -20,19 +20,9 @@ public class PaymentScreen {
         this.fare = fare;
     }
     public Scene createPaymentScreen(Stage stage, Scene previousScene){
-        Label headingLabel = new Label("Confirm to Payment");
+        Label headingLabel = new Label("Confirm Payment");
         headingLabel.setStyle("-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #0d47a1");
-
-        //<<<<<<-----------------------------------------------------------------Ticket Summary
-        VBox summaryBox = new VBox(10);
-        summaryBox.setPadding(new Insets(15));
-        summaryBox.setStyle(
-                "-fx-background-color: white;" +
-                "-fx-border-color: #bdbdbd;" +
-                "-fx-border-radius: 10;" +
-                "-fx-background-radius: 10;" +
-                "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 8, 0, 0, 4);"
-        );
+        headingLabel.setAlignment(Pos.CENTER);
 
         Label formLabel = new Label("Form: " + originStation);
         Label toLabel = new Label("To: " + destinationStation);
@@ -42,23 +32,34 @@ public class PaymentScreen {
         toLabel.setStyle("-fx-font-size: 16px;");
         fareLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
+        //<<<<<<-----------------------------------------------------------------Ticket Summary
+
+        VBox summaryBox = new VBox(10, formLabel, toLabel, fareLabel);
+        summaryBox.setPadding(new Insets(15));
+        summaryBox.setStyle(
+                        "-fx-background-color: white;" +
+                        "-fx-border-color: #bdbdbd;" +
+                        "-fx-border-radius: 10;" +
+                        "-fx-background-radius: 10;" +
+                        "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 8, 0, 0, 4);"
+        );
+
         summaryBox.getChildren().addAll(formLabel, toLabel, fareLabel);
 
         //<<<<<<-----------------------------------------------------------------Buttons
         Button cashBtn = new Button("Cash");
         Button onlineBtn = new Button("Online");
-        Button payBtn = new Button("Pay");
-        Button cancelBtn = new Button("Cancel");
 
         stylePrimaryButton(cashBtn);
         stylePrimaryButton(onlineBtn);
         //<<<<<---------------------------------------------------------------------Pay Button
 
+        Button payBtn = new Button("Pay");
         payBtn.setStyle("-fx-background-color: #90caf9; -fx-text-fill: white; -fx-background-radius: 10;");
         payBtn.setDisable(true); //<<<<<---------After choosing payment option, this button will enable.
 
         //<<<<<---------------------------------------------------------------------Cancel Button
-
+        Button cancelBtn = new Button("Cancel");
         cancelBtn.setStyle("-fx-background-color: #d32f2f; -fx-text-fill: white; -fx-background-radius: 10;");
 
         //<<<<<---------------------------------------------------------------------Payment Mode Logic
@@ -87,11 +88,20 @@ public class PaymentScreen {
         HBox paymentOptions = new HBox(15, cashBtn, onlineBtn);
         paymentOptions.setAlignment(Pos.CENTER);
 
-        VBox mainBox = new VBox(20, headingLabel, summaryBox, paymentOptions, payBtn, cancelBtn);
-        mainBox.setAlignment(Pos.TOP_CENTER);
-        mainBox.setPadding(new Insets(30));
+        VBox centerBox = new VBox(20, summaryBox, paymentOptions);
+        centerBox.setAlignment(Pos.CENTER);
+        centerBox.setPadding(new Insets(20));
 
-        StackPane root = new StackPane(mainBox);
+        HBox bottomBtn = new HBox(15, payBtn, cancelBtn);
+        bottomBtn.setAlignment(Pos.CENTER_RIGHT);
+        bottomBtn.setPadding(new Insets(0,20,20,20));
+
+        BorderPane root = new BorderPane();
+        root.setTop(headingLabel);
+        root.setBottom(bottomBtn);
+        root.setCenter(centerBox);
+        BorderPane.setAlignment(headingLabel, Pos.CENTER);
+
         root.setStyle("-fx-background-color: linear-gradient(to bottom, #e3f2fd, #ffffff);");
 
         Scene scene = new Scene(root,500, 500);
