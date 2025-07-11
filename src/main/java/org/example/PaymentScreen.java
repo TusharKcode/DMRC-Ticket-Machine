@@ -44,8 +44,6 @@ public class PaymentScreen {
                         "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 8, 0, 0, 4);"
         );
 
-        summaryBox.getChildren().addAll(formLabel, toLabel, fareLabel);
-
         //<<<<<<-----------------------------------------------------------------Buttons
         Button cashBtn = new Button("Cash");
         Button onlineBtn = new Button("Online");
@@ -104,8 +102,7 @@ public class PaymentScreen {
 
         root.setStyle("-fx-background-color: linear-gradient(to bottom, #e3f2fd, #ffffff);");
 
-        Scene scene = new Scene(root,500, 500);
-        return scene;
+        return new Scene(root,500, 500);
     }
     private void stylePrimaryButton(Button button){
         button.setStyle("-fx-background-color: #1976d2; -fx-background-radius: 10; -fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: white; -fx-cursor: hand;");
