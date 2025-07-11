@@ -125,6 +125,25 @@ public class PaymentScreen {
         qrStage.setScene(scene);
         qrStage.show();
     }
+    private void showSuccessPopup(){
+        Stage successStage = new Stage();
+        VBox box = new VBox(15);
+        box.setAlignment(Pos.CENTER);
+        box.setPadding(new Insets(20));
+
+        Label successLabel = new Label("Payment Successful");
+        successLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: green;");
+
+        Label fareLabel = new Label("₹" + (int)fare + "Paid Successful");
+        fareLabel.setStyle("-fx-font-size: 16px;");
+
+        box.getChildren().addAll(successLabel, fareLabel);
+
+        Scene scene = new Scene(box, 300, 150);
+        successStage.setTitle("Success");
+        successStage.setScene(scene);
+        successStage.show();
+    }
 }
 
 
