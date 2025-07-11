@@ -91,12 +91,10 @@ public class PaymentScreen {
         mainBox.setAlignment(Pos.TOP_CENTER);
         mainBox.setPadding(new Insets(30));
 
-        paymentOptions.getChildren().addAll(cashBtn, onlineBtn);
-
         StackPane root = new StackPane(mainBox);
         root.setStyle("-fx-background-color: linear-gradient(to bottom, #e3f2fd, #ffffff);");
 
-        Scene scene = new Scene(mainBox,500, 500);
+        Scene scene = new Scene(root,500, 500);
         return scene;
     }
     private void stylePrimaryButton(Button button){
@@ -148,7 +146,3 @@ public class PaymentScreen {
         successStage.show();
     }
 }
-
-
-
-
