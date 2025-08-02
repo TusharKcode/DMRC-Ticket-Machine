@@ -141,14 +141,7 @@ public class RechargeCardScreen {
         Label title = new Label("Online Recharge");
         title.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
 
-        Label cardLabel = new Label("Card number: " + cardNumber);
-        Label balanceLabel = new Label("Current balance: " + currentBalance);
-        Label maxLabel = new Label("Maximum balance: " + maxBalance);
-
-        VBox cardBox = new VBox(10, cardLabel, balanceLabel, maxLabel);
-        cardBox.setAlignment(Pos.CENTER_LEFT);
-        cardBox.setPadding(new Insets(20));
-        cardBox.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 8px; -fx-border-color: #ccc; -fx-border-radius: 8px;");
+        VBox cardBox = getVBox(cardNumber, currentBalance, maxBalance);
 
         Label qrInstruction = new Label("Scan the QR code to complete the payment");
         qrInstruction.setStyle("-fx-font-size: 16px;");
@@ -179,6 +172,18 @@ public class RechargeCardScreen {
 
         Scene scene = new Scene(root, 800, 850);
         primaryStage.setScene(scene);
+    }
+
+    private static VBox getVBox(String cardNumber, double currentBalance, double maxBalance) {
+        Label cardLabel = new Label("Card number: " + cardNumber);
+        Label balanceLabel = new Label("Current balance: " + currentBalance);
+        Label maxLabel = new Label("Maximum balance: " + maxBalance);
+
+        VBox cardBox = new VBox(10, cardLabel, balanceLabel, maxLabel);
+        cardBox.setAlignment(Pos.CENTER_LEFT);
+        cardBox.setPadding(new Insets(20));
+        cardBox.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 8px; -fx-border-color: #ccc; -fx-border-radius: 8px;");
+        return cardBox;
     }
 
     public static void createReachargeSuccessScreen(Stage primaryStage, String cardNumber, double oldBalance, double rechargeAmount){
