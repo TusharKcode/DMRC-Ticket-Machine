@@ -113,7 +113,7 @@ public class RechargeCardScreen {
             if (newBalance > maxBalance){
                 showAlert("Limit Exceeded", "You cannot exceed the ₹ " + maxBalance + " card balance.");
             } else {
-                createReachargeSuccessScreen(primaryStage, cardNumber, currentBalance, rechargeAmt);
+                createRechargeSuccessScreen(primaryStage, cardNumber, currentBalance, rechargeAmt);
             }
         });
 
@@ -153,7 +153,7 @@ public class RechargeCardScreen {
         Label qrInstruction = new Label("Scan the QR code to complete the payment");
         qrInstruction.setStyle("-fx-font-size: 16px;");
 
-        Image qrImage = new Image(Objects.requireNonNull(RechargeCardScreen.class.getResource("/images/qr.png")));
+        Image qrImage = new Image(Objects.requireNonNull(RechargeCardScreen.class.getResource("/images/qr.png")).toExternalForm());
         ImageView qrView = new ImageView(qrImage);
         qrView.setFitWidth(200);
         qrView.setPreserveRatio(true);
@@ -168,7 +168,7 @@ public class RechargeCardScreen {
             if (newBalance > maxBalance){
                 showAlert("Limit Exceeded", "You cannot exceed the ₹ " + maxBalance + " card balance.");
             } else {
-                createReachargeSuccessScreen(primaryStage, cardNumber, currentBalance, rechargeAmount);
+                createRechargeSuccessScreen(primaryStage, cardNumber, currentBalance, rechargeAmount);
             }
         });
         VBox cardBox = getVBox(cardNumber, currentBalance, maxBalance);
@@ -181,21 +181,13 @@ public class RechargeCardScreen {
         primaryStage.setScene(scene);
     }
 
-    public static void createReachargeSuccessScreen(Stage primaryStage, String cardNumber, double oldBalance, double rechargeAmount){
+    public static void createRechargeSuccessScreen(Stage primaryStage, String cardNumber, double oldBalance, double rechargeAmount){
         Label title = new Label("Recharge Successfully");
         title.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: green;");
 
         VBox infoBox = getInfoBox(cardNumber, oldBalance, rechargeAmount);
 
-        Button printReceiptBtn = new Button("Print Receipt");
-        printReceiptBtn.setOnAction(e -> showAlert("Printing...", "Receipt is being printed (simulated)")
-        );
-
-        Button homeBtn = new Button("Return to Main Screen");
-        homeBtn.setOnAction(e -> welcomeScreen.createWelcomeScene(primaryStage));
-
-        HBox buttonBox = new HBox(20, printReceiptBtn, homeBtn);
-        buttonBox.setAlignment(Pos.CENTER);
+        HBox buttonBox = getButtonBox(primaryStage);
 
         VBox root = new VBox(30, title, infoBox, buttonBox);
         root.setStyle("-fx-background-color: #f4fff4;");
@@ -204,6 +196,24 @@ public class RechargeCardScreen {
 
         Scene scene = new Scene(root, 800, 850);
         primaryStage.setScene(scene);
+    }
+
+    private static HBox getButtonBox(Stage primaryStage) {
+        Button printReceiptBtn = new Button("Print Receipt");
+        printReceiptBtn.setOnAction(e -> {
+            showAlert("Printing...", "Receipt is being printed (simulated)");
+        });
+
+        Button homeBtn = new Button("Return to Main Screen");
+        homeBtn.setOnAction(e -> {
+            welcomeScreen welcome = new welcomeScreen();
+            Scene welcomeScene = welcome.createWelcomeScene(primaryStage);
+            primaryStage.setScene(welcomeScene);
+        });
+
+        HBox buttonBox = new HBox(20, printReceiptBtn, homeBtn);
+        buttonBox.setAlignment(Pos.CENTER);
+        return buttonBox;
     }
 
     private static VBox getInfoBox(String cardNumber, double oldBalance, double rechargeAmount) {
@@ -239,9 +249,15 @@ public class RechargeCardScreen {
         Button noBtn = new Button("No, Go back to main screen");
         yesBtn.setOnAction(e -> {
             showAlert("Receipt Printed", "Thank you! Your receipt has been printed.");
-            welcomeScreen.createWelcomeScene(primaryStage);
+            welcomeScreen welcome = new welcomeScreen();
+            Scene welcomeScene = welcome.createWelcomeScene(primaryStage);
+            primaryStage.setScene(welcomeScene);
         });
-        noBtn.setOnAction(e -> welcomeScreen.createWelcomeScene(primaryStage));
+        noBtn.setOnAction(e -> {
+            welcomeScreen welcome = new welcomeScreen();
+            Scene welcomeScene = welcome.createWelcomeScene(primaryStage);
+            primaryStage.setScene(welcomeScene);
+        });
 
         HBox btnBox = new HBox(20, yesBtn, noBtn);
         btnBox.setAlignment(Pos.CENTER);
