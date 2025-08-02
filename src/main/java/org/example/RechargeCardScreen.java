@@ -153,7 +153,7 @@ public class RechargeCardScreen {
         Label qrInstruction = new Label("Scan the QR code to complete the payment");
         qrInstruction.setStyle("-fx-font-size: 16px;");
 
-        Image qrImage = new Image(Objects.requireNonNull(RechargeCardScreen.class.getResource("/images/qr.png")).toExternalForm());
+        Image qrImage = new Image(Objects.requireNonNull(RechargeCardScreen.class.getResource("/qr.png")).toExternalForm());
         ImageView qrView = new ImageView(qrImage);
         qrView.setFitWidth(200);
         qrView.setPreserveRatio(true);
