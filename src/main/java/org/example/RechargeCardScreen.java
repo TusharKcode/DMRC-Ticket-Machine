@@ -40,60 +40,48 @@ public class RechargeCardScreen {
     }
 
     public static void createCardDetailsScreen(Stage primaryStage){
-        //------------------------------------------------>>>> Dummy Card
-        String cardNumber = "DMRC123456789";
-        double currentBalance = 180.0;
-        double maxBalance = 3000.0;
+
+        VBox root = new VBox(20);
+        root.setAlignment(Pos.TOP_CENTER);
+        root.setPadding(new Insets(40));
+        root.setStyle("-fx-background-color: linear-gradient(to bottom, #f2f2f2, #e0e0e0)");
+
+        VBox cardInfoBox = new VBox(10);
+        cardInfoBox.setStyle("-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, gray, 5,0,0,1)");
+        cardInfoBox.setPadding(new Insets(15));
+        cardInfoBox.setAlignment(Pos.CENTER_LEFT);
+        cardInfoBox.setMaxWidth(350);
+
+        Label cardNumber = new Label("Card Number: ");
+        Label currentBalance =new Label("Current Balance: ");
+        Label maxBalance = new Label("Maximum Allowed Balance: ");
+
+        cardInfoBox.getChildren().addAll(cardNumber, currentBalance, maxBalance);
 
         Label title = new Label("Card Details");
         title.setStyle("-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
 
-        Label cardlabel = new Label("Card Number: " + cardNumber);
-        Label balanceLabel =new Label("Current Balance: " + currentBalance);
-        Label maxLabel = new Label("Maximum Allowed Balance: " + maxBalance);
-
-        VBox cardInfoBox = new VBox(10, cardlabel, balanceLabel, maxLabel);
-        cardInfoBox.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 8px; -fx-border-color: #ccc;" +
-                " -fx-border-radius: 8px; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10,0,0,4)");
-
-        cardInfoBox.setAlignment(Pos.CENTER_LEFT);
-
+        HBox paymentButtons = new HBox(30);
+        paymentButtons.setAlignment(Pos.CENTER);
         Button cashBtn = new Button("Cash Payment");
         Button onlineBtn = new Button("Online Payment");
+        paymentButtons.getChildren().addAll(cashBtn, onlineBtn);
+
         Button cancelBtn = new Button("Cancel");
+        cancelBtn.setPrefWidth(120);
+        VBox cancelBox = new VBox(cancelBtn);
+        cancelBox.setAlignment(Pos.BOTTOM_CENTER);
+        cancelBox.setPadding(new Insets(50,0,0,0));
 
-        List<Button> buttons = List.of(cashBtn, onlineBtn, cancelBtn);
-        for (Button btn : buttons){
-            btn.setStyle("""
-                    -fx-background-color: #3498db;
-                    -fx-background-radius: 8;
-                    -fx-text-fill: white;
-                    -fx-font-size: 16px;
-                    -fx-padding: 10 20;
-                    -fx-cursor: hand;
-                    """);
-            btn.setOnMouseEntered(e -> btn.setStyle(btn.getStyle() + "-fx-opacity: 0.8;"));
-            btn.setOnMouseExited(e -> btn.setStyle(btn.getStyle().replace("-fx-opacity: 0.8;", "")));
-        }
-        cashBtn.setOnAction(e -> createCashPaymentScreen(primaryStage, cardNumber, currentBalance, maxBalance));
-        onlineBtn.setOnAction(e -> createOnlinePaymentScreen(primaryStage, cardNumber, currentBalance, maxBalance));
-        cancelBtn.setOnAction(e -> {
-            welcomeScreen welcome = new welcomeScreen();
-            primaryStage.setScene(welcome.createWelcomeScene(primaryStage));
-        });
+        VBox content = new VBox(20, cardInfoBox, paymentButtons);
+        content.setAlignment(Pos.CENTER);
 
-        HBox actionBtns = new HBox(20, cashBtn, onlineBtn);
-        actionBtns.setAlignment(Pos.CENTER);
+        root.getChildren().addAll(content, cancelBox);
 
-        VBox root = new VBox(30, cardInfoBox, actionBtns, cancelBtn);
-        root.setAlignment(Pos.CENTER);
-        root.setPadding(new Insets(40));
-        root.setStyle("""
-                -fx-background-color: linear-gradient(to bottom, #f2f2f2, #e0e0e0)
-                """);
-
-        Scene scene = new Scene(root, 800, 600);
+        Scene scene = new Scene(root, 600, 500);
         primaryStage.setScene(scene);
+        primaryStage.setTitle("DMRC Ticket Machine");
+        primaryStage.show();
     }
 
     public static void createCashPaymentScreen(Stage primaryStage, String cardNumber, double currentBalance, double maxBalance){
