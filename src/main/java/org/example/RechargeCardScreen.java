@@ -9,6 +9,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.scene.image.Image;
@@ -79,14 +82,7 @@ public class RechargeCardScreen {
         Label title = new Label("Cash Recharge");
         title.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
 
-        Label cardLabel = new Label("Card number: " + cardNumber);
-        Label balanceLabel = new Label("Current balance: " + currentBalance);
-        Label maxLabel = new Label("Maximum balance: " + maxBalance);
-
-        VBox cardBox = new VBox(10, cardLabel, balanceLabel, maxLabel);
-        cardBox.setAlignment(Pos.CENTER_LEFT);
-        cardBox.setPadding(new Insets(20));
-        cardBox.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 8px; -fx-border-color: #ccc; -fx-border-radius: 8px;");
+        VBox cardBox = getVBox(cardNumber, currentBalance, maxBalance);
 
         Label chooseLabel = new Label("Select Recharge Amount");
         chooseLabel.setStyle("-fx-font-size: 16px;");
@@ -115,57 +111,13 @@ public class RechargeCardScreen {
             double newBalance = currentBalance + rechargeAmt;
 
             if (newBalance > maxBalance){
-                showAlert("Limit Exceeded, You cannot exceed the ₹ " + maxBalance + " card balance.");
+                showAlert("Limit Exceeded", "You cannot exceed the ₹ " + maxBalance + " card balance.");
             } else {
                 createReachargeSuccessScreen(primaryStage, cardNumber, currentBalance, rechargeAmt);
             }
         });
 
         VBox root = new VBox(25, title, cardBox, chooseLabel, amountBtn, insertInstructions, completeBtn);
-        root.setStyle("-fx-background-color: #f2f2f2");
-        root.setPadding(new Insets(40));
-        root.setAlignment(Pos.CENTER);
-
-        Scene scene = new Scene(root, 800, 850);
-        primaryStage.setScene(scene);
-    }
-    private static void showAlert(String title, String message){
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
-    public static void createOnlinePaymentScreen(Stage primaryStage, String cardNumber, double currentBalance, double maxBalance){
-        Label title = new Label("Online Recharge");
-        title.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
-
-        VBox cardBox = getVBox(cardNumber, currentBalance, maxBalance);
-
-        Label qrInstruction = new Label("Scan the QR code to complete the payment");
-        qrInstruction.setStyle("-fx-font-size: 16px;");
-
-        Image qrImage = new Image(Objects.requireNonNull(RechargeCardScreen.class.getResource("/images/qr.png").toExternalForm()));
-        ImageView qrView = new ImageView(qrImage);
-        qrView.setFitWidth(200);
-        qrView.setPreserveRatio(true);
-
-        Label amountLabel = new Label("Recharge Amount: ₹500");
-        amountLabel.setStyle("-fx-font-size: 16px;");
-
-        Button confirmBtn = new Button("Paid Successfully");
-        confirmBtn.setOnAction(e -> {
-            double rechargeAmount = 500;
-            double newBalance = currentBalance + rechargeAmount;
-            if (newBalance > maxBalance){
-                showAlert("Limit Exceeded, You cannot exceed the ₹ " + maxBalance + " card balance.");
-            } else {
-                createReachargeSuccessScreen(primaryStage, cardNumber, currentBalance, rechargeAmount);
-            }
-        });
-
-        VBox root = new VBox(25, title, cardBox, amountLabel, qrInstruction, qrView, confirmBtn);
         root.setStyle("-fx-background-color: #f2f2f2");
         root.setPadding(new Insets(40));
         root.setAlignment(Pos.CENTER);
@@ -186,25 +138,58 @@ public class RechargeCardScreen {
         return cardBox;
     }
 
+    private static void showAlert(String title, String message){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    public static void createOnlinePaymentScreen(Stage primaryStage, String cardNumber, double currentBalance, double maxBalance){
+        Label title = new Label("Online Recharge");
+        title.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
+
+        Label qrInstruction = new Label("Scan the QR code to complete the payment");
+        qrInstruction.setStyle("-fx-font-size: 16px;");
+
+        Image qrImage = new Image(Objects.requireNonNull(RechargeCardScreen.class.getResource("/images/qr.png")));
+        ImageView qrView = new ImageView(qrImage);
+        qrView.setFitWidth(200);
+        qrView.setPreserveRatio(true);
+
+        Label amountLabel = new Label("Recharge Amount: ₹500");
+        amountLabel.setStyle("-fx-font-size: 16px;");
+
+        Button confirmBtn = new Button("Paid Successfully");
+        confirmBtn.setOnAction(e -> {
+            double rechargeAmount = 500;
+            double newBalance = currentBalance + rechargeAmount;
+            if (newBalance > maxBalance){
+                showAlert("Limit Exceeded", "You cannot exceed the ₹ " + maxBalance + " card balance.");
+            } else {
+                createReachargeSuccessScreen(primaryStage, cardNumber, currentBalance, rechargeAmount);
+            }
+        });
+        VBox cardBox = getVBox(cardNumber, currentBalance, maxBalance);
+        VBox root = new VBox(25, title, cardBox, amountLabel, qrInstruction, qrView, confirmBtn);
+        root.setStyle("-fx-background-color: #f2f2f2");
+        root.setPadding(new Insets(40));
+        root.setAlignment(Pos.CENTER);
+
+        Scene scene = new Scene(root, 800, 850);
+        primaryStage.setScene(scene);
+    }
+
     public static void createReachargeSuccessScreen(Stage primaryStage, String cardNumber, double oldBalance, double rechargeAmount){
         Label title = new Label("Recharge Successfully");
         title.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: green;");
 
-        Label cardLabel = new Label("Card Number: " + cardNumber);
-        Label oldBalanceLabel = new Label("Previous Balance: " + oldBalance);
-        Label rechargeLabel = new Label("Recharge Amount: " + rechargeAmount);
-        Label newBalanceLabel = new Label("New Balance: " + (oldBalance + rechargeAmount));
-        newBalanceLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
-
-        VBox infoBox = new VBox(10, cardLabel, oldBalanceLabel, rechargeLabel);
-        infoBox.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 8px; -fx-border-color: #ccc; -fx-border-radius: 8px;");
-        infoBox.setAlignment(Pos.CENTER_LEFT);
-        infoBox.setPadding(new Insets(20));
+        VBox infoBox = getInfoBox(cardNumber, oldBalance, rechargeAmount);
 
         Button printReceiptBtn = new Button("Print Receipt");
-        printReceiptBtn.setOnAction(e -> {
-            showAlert("Printing...", "Receipt is being printed (simulated)");
-        });
+        printReceiptBtn.setOnAction(e -> showAlert("Printing...", "Receipt is being printed (simulated)")
+        );
 
         Button homeBtn = new Button("Return to Main Screen");
         homeBtn.setOnAction(e -> welcomeScreen.createWelcomeScene(primaryStage));
@@ -218,6 +203,54 @@ public class RechargeCardScreen {
         root.setPadding(new Insets(40));
 
         Scene scene = new Scene(root, 800, 850);
+        primaryStage.setScene(scene);
+    }
+
+    private static VBox getInfoBox(String cardNumber, double oldBalance, double rechargeAmount) {
+        Label cardLabel = new Label("Card Number: " + cardNumber);
+        Label oldBalanceLabel = new Label("Previous Balance: " + oldBalance);
+        Label rechargeLabel = new Label("Recharge Amount: " + rechargeAmount);
+        Label newBalanceLabel = new Label("New Balance: " + (oldBalance + rechargeAmount));
+        newBalanceLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+
+        VBox infoBox = new VBox(10, cardLabel, oldBalanceLabel, rechargeLabel);
+        infoBox.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 8px; -fx-border-color: #ccc; -fx-border-radius: 8px;");
+        infoBox.setAlignment(Pos.CENTER_LEFT);
+        infoBox.setPadding(new Insets(20));
+        return infoBox;
+    }
+
+    private static void showReceiptOptionScreen(Stage primaryStage, String cardNumber, double rechargeAmount, double newBalance){
+        Label title = new Label("Recharge Successful");
+        title.setFont(Font.font("Arial", FontWeight.BOLD, 24));
+        title.setTextAlignment(TextAlignment.CENTER);
+
+        Label cardLabel = new Label("Card Number: " + cardNumber);
+        Label amountLabel = new Label("Recharge Amount: " + rechargeAmount);
+        Label newBalanceLabel = new Label("New Balance: " + newBalance);
+
+        VBox detailsBox = new VBox(10, cardLabel, amountLabel, newBalanceLabel);
+        detailsBox.setAlignment(Pos.CENTER);
+
+        Label askReceipt = new Label("Would you like to print the receipt?");
+        askReceipt.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+
+        Button yesBtn = new Button("Yes. Print Receipt");
+        Button noBtn = new Button("No, Go back to main screen");
+        yesBtn.setOnAction(e -> {
+            showAlert("Receipt Printed", "Thank you! Your receipt has been printed.");
+            welcomeScreen.createWelcomeScene(primaryStage);
+        });
+        noBtn.setOnAction(e -> welcomeScreen.createWelcomeScene(primaryStage));
+
+        HBox btnBox = new HBox(20, yesBtn, noBtn);
+        btnBox.setAlignment(Pos.CENTER);
+
+        VBox root = new VBox(20, title, detailsBox, askReceipt, btnBox);
+        root.setAlignment(Pos.CENTER);
+        root.setPadding(new Insets(30));
+
+        Scene scene = new Scene(root, 600, 400);
         primaryStage.setScene(scene);
     }
 }
