@@ -11,9 +11,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
-import javax.swing.text.html.ImageView;
-import java.awt.*;
+import java.util.Objects;
 
 public class RechargeCardScreen {
     public static void createInsertCardScreen(Stage primaryStage){
@@ -30,9 +31,7 @@ public class RechargeCardScreen {
 
         //--------------------------------------------->>>> Simulate Card detection after 3 seconds
         PauseTransition pause = new PauseTransition(Duration.seconds(3));
-        pause.setOnFinished(event -> {
-            createCardDetailsScreen(primaryStage);
-        });
+        pause.setOnFinished(event -> createCardDetailsScreen(primaryStage));
         pause.play();
     }
 
@@ -53,6 +52,7 @@ public class RechargeCardScreen {
         cardInfoBox.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 8px; -fx-border-color: #ccc; -fx-border-radius: 8px;");
         cardInfoBox.setPadding(new Insets(20));
         cardInfoBox.setAlignment(Pos.CENTER_LEFT);
+        cardInfoBox.getChildren().addAll(cardlabel, balanceLabel, maxLabel);
 
         Button cashBtn = new Button("Cash Payment");
         Button onlineBtn = new Button("Online Payment");
@@ -130,7 +130,7 @@ public class RechargeCardScreen {
         primaryStage.setScene(scene);
     }
     private static void showAlert(String title, String message){
-        Alert alert = new Alert(Alert.AlertType.WARNING);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
@@ -153,7 +153,7 @@ public class RechargeCardScreen {
         Label qrInstruction = new Label("Scan the QR code to complete the payment");
         qrInstruction.setStyle("-fx-font-size: 16px;");
 
-        Image qrImage = new Image(RechargeCardScreen.class.getResource("/images/qr.png").toExternalForm());
+        Image qrImage = new Image(Objects.requireNonNull(RechargeCardScreen.class.getResource("/images/qr.png").toExternalForm()));
         ImageView qrView = new ImageView(qrImage);
         qrView.setFitWidth(200);
         qrView.setPreserveRatio(true);
@@ -164,7 +164,7 @@ public class RechargeCardScreen {
         Button confirmBtn = new Button("Paid Successfully");
         confirmBtn.setOnAction(e -> {
             double rechargeAmount = 500;
-            double newBalance = currentbalance + rechargeAmount;
+            double newBalance = currentBalance + rechargeAmount;
             if (newBalance > maxBalance){
                 showAlert("Limit Exceeded, You cannot exceed the ₹ " + maxBalance + " card balance.");
             } else {
@@ -176,6 +176,41 @@ public class RechargeCardScreen {
         root.setStyle("-fx-background-color: #f2f2f2");
         root.setPadding(new Insets(40));
         root.setAlignment(Pos.CENTER);
+
+        Scene scene = new Scene(root, 800, 850);
+        primaryStage.setScene(scene);
+    }
+
+    public static void createReachargeSuccessScreen(Stage primaryStage, String cardNumber, double oldBalance, double rechargeAmount){
+        Label title = new Label("Recharge Successfully");
+        title.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: green;");
+
+        Label cardLabel = new Label("Card Number: " + cardNumber);
+        Label oldBalanceLabel = new Label("Previous Balance: " + oldBalance);
+        Label rechargeLabel = new Label("Recharge Amount: " + rechargeAmount);
+        Label newBalanceLabel = new Label("New Balance: " + (oldBalance + rechargeAmount));
+        newBalanceLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+
+        VBox infoBox = new VBox(10, cardLabel, oldBalanceLabel, rechargeLabel);
+        infoBox.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 8px; -fx-border-color: #ccc; -fx-border-radius: 8px;");
+        infoBox.setAlignment(Pos.CENTER_LEFT);
+        infoBox.setPadding(new Insets(20));
+
+        Button printReceiptBtn = new Button("Print Receipt");
+        printReceiptBtn.setOnAction(e -> {
+            showAlert("Printing...", "Receipt is being printed (simulated)");
+        });
+
+        Button homeBtn = new Button("Return to Main Screen");
+        homeBtn.setOnAction(e -> welcomeScreen.createWelcomeScene(primaryStage));
+
+        HBox buttonBox = new HBox(20, printReceiptBtn, homeBtn);
+        buttonBox.setAlignment(Pos.CENTER);
+
+        VBox root = new VBox(30, title, infoBox, buttonBox);
+        root.setStyle("-fx-background-color: #f4fff4;");
+        root.setAlignment(Pos.CENTER);
+        root.setPadding(new Insets(40));
 
         Scene scene = new Scene(root, 800, 850);
         primaryStage.setScene(scene);
