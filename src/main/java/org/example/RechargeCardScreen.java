@@ -17,6 +17,7 @@ import javafx.util.Duration;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+import java.util.List;
 import java.util.Objects;
 
 public class RechargeCardScreen {
@@ -45,36 +46,53 @@ public class RechargeCardScreen {
         double maxBalance = 3000.0;
 
         Label title = new Label("Card Details");
-        title.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
+        title.setStyle("-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
 
         Label cardlabel = new Label("Card Number: " + cardNumber);
         Label balanceLabel =new Label("Current Balance: " + currentBalance);
         Label maxLabel = new Label("Maximum Allowed Balance: " + maxBalance);
 
-        VBox cardInfoBox = new VBox();
-        cardInfoBox.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 8px; -fx-border-color: #ccc; -fx-border-radius: 8px;");
-        cardInfoBox.setPadding(new Insets(20));
+        VBox cardInfoBox = new VBox(10, cardlabel, balanceLabel, maxLabel);
+        cardInfoBox.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 8px; -fx-border-color: #ccc;" +
+                " -fx-border-radius: 8px; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10,0,0,4)");
+
         cardInfoBox.setAlignment(Pos.CENTER_LEFT);
-        cardInfoBox.getChildren().addAll(cardlabel, balanceLabel, maxLabel);
 
         Button cashBtn = new Button("Cash Payment");
         Button onlineBtn = new Button("Online Payment");
+        Button cancelBtn = new Button("Cancel");
 
-        cashBtn.setStyle("-fx-font-size: 16px;");
+        List<Button> buttons = List.of(cashBtn, onlineBtn, cancelBtn);
+        for (Button btn : buttons){
+            btn.setStyle("""
+                    -fx-background-color: #3498db;
+                    -fx-background-radius: 8;
+                    -fx-text-fill: white;
+                    -fx-font-size: 16px;
+                    -fx-padding: 10 20;
+                    -fx-cursor: hand;
+                    """);
+            btn.setOnMouseEntered(e -> btn.setStyle(btn.getStyle() + "-fx-opacity: 0.8;"));
+            btn.setOnMouseExited(e -> btn.setStyle(btn.getStyle().replace("-fx-opacity: 0.8;", "")));
+        }
         cashBtn.setOnAction(e -> createCashPaymentScreen(primaryStage, cardNumber, currentBalance, maxBalance));
-
-        onlineBtn.setStyle("-fx-font-size: 16px;");
         onlineBtn.setOnAction(e -> createOnlinePaymentScreen(primaryStage, cardNumber, currentBalance, maxBalance));
+        cancelBtn.setOnAction(e -> {
+            welcomeScreen welcome = new welcomeScreen();
+            primaryStage.setScene(welcome.createWelcomeScene(primaryStage));
+        });
 
-        HBox buttonBox = new HBox(30, cashBtn, onlineBtn);
-        buttonBox.setAlignment(Pos.CENTER);
+        HBox actionBtns = new HBox(20, cashBtn, onlineBtn);
+        actionBtns.setAlignment(Pos.CENTER);
 
-        VBox root = new VBox(30, cardInfoBox, buttonBox);
+        VBox root = new VBox(30, cardInfoBox, actionBtns, cancelBtn);
         root.setAlignment(Pos.CENTER);
         root.setPadding(new Insets(40));
-        root.setStyle("-fx-background-color: #f2f2f2;");
+        root.setStyle("""
+                -fx-background-color: linear-gradient(to bottom, #f2f2f2, #e0e0e0)
+                """);
 
-        Scene scene = new Scene(root, 800, 500);
+        Scene scene = new Scene(root, 800, 600);
         primaryStage.setScene(scene);
     }
 
