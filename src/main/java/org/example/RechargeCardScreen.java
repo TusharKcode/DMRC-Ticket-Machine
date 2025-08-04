@@ -1,278 +1,79 @@
 package org.example;
 
-import javafx.animation.PauseTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
-import javafx.util.Duration;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-
-import java.util.List;
-import java.util.Objects;
 
 public class RechargeCardScreen {
-    public static void createInsertCardScreen(Stage primaryStage){
-        Label instruction = new Label("Please insert or place your card on the machine to proceed");
-        instruction.setStyle("-fx-font-size: 20px; -fx-text-fill: #333;");
+    public static void show(Stage stage){
+        // Title
+        Label title = new Label("Select Recharge Mode");
+        title.setFont(new Font("Arial", 28));
+        title.setTextFill(Color.DARKBLUE);
+        title.setAlignment(Pos.CENTER);
 
-        VBox root = new VBox(30, instruction);
-        root.setAlignment(Pos.CENTER);
-        root.setPadding(new Insets(50));
-        root.setStyle("-fx-background-color: linear-gradient(to bottom, #e0e0e0 #f5f5f5);");
+        // Buttons
+        Button cashBtn = new Button("Cash");
+        cashBtn.setStyle("-fx-font-size: 18px");
+        cashBtn.setPrefSize(150, 60);
 
-        Scene scene = new Scene(root, 800, 500);
-        primaryStage.setScene(scene);
+        Button onlineBtn = new Button("Online");
+        onlineBtn.setStyle("-fx-font-size: 18px");
+        onlineBtn.setPrefSize(150, 60);
 
-        //--------------------------------------------->>>> Simulate Card detection after 3 seconds
-        PauseTransition pause = new PauseTransition(Duration.seconds(3));
-        pause.setOnFinished(event -> createCardDetailsScreen(primaryStage));
-        pause.play();
-    }
+        // Buttons Action
+        cashBtn.setOnAction(e -> CashRechargeScreen.show(stage));
+        onlineBtn.setOnAction(e -> OnlineRechargeScreen.show(stage));
 
-    public static void createCardDetailsScreen(Stage primaryStage){
+        HBox rechargeOptions = new HBox(30, cashBtn, onlineBtn);
+        rechargeOptions.setAlignment(Pos.CENTER);
 
-        VBox root = new VBox(20);
+        // Card Box info
+        Label cardInfo = new Label("Card Number: 1234567\nCurrent Balance: ₹250\nMax Balance: ₹2000");
+        cardInfo.setFont(new Font("Arial", 16));
+        cardInfo.setStyle("-fx-border-color: gray; -fx-border-width: 2; -fx-padding: 15;");
+
+        VBox cardInfoBox = new VBox(cardInfo);
+        cardInfoBox.setAlignment(Pos.CENTER);
+
+        // Cancel Button
+        Button cancelBtn = new Button("Cancel");
+        cancelBtn.setStyle("-fx-background-color: crimson; -fx-text-fill: white;");
+        cancelBtn.setPrefWidth(120);
+        cancelBtn.setFont(new Font("Arial", 16));
+        welcomeScreen welcome = new welcomeScreen();
+        cancelBtn.setOnAction(e -> {
+            Scene welcomeScene = welcome.createWelcomeScene(stage);
+            stage.setScene(welcomeScene);
+        });
+
+        VBox root = new VBox(30, title,cardInfoBox, rechargeOptions, cancelBtn);
         root.setAlignment(Pos.TOP_CENTER);
         root.setPadding(new Insets(40));
-        root.setStyle("-fx-background-color: linear-gradient(to bottom, #f2f2f2, #e0e0e0)");
+        root.setStyle("-fx-background-color: #f4f8ff;");
 
-        VBox cardInfoBox = new VBox(10);
-        cardInfoBox.setStyle("-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, gray, 5,0,0,1)");
-        cardInfoBox.setPadding(new Insets(15));
-        cardInfoBox.setAlignment(Pos.CENTER_LEFT);
-        cardInfoBox.setMaxWidth(350);
-
-        Label cardNumber = new Label("Card Number: ");
-        Label currentBalance =new Label("Current Balance: ");
-        Label maxBalance = new Label("Maximum Allowed Balance: ");
-
-        cardInfoBox.getChildren().addAll(cardNumber, currentBalance, maxBalance);
-
-        Label title = new Label("Card Details");
-        title.setStyle("-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
-
-        HBox paymentButtons = new HBox(30);
-        paymentButtons.setAlignment(Pos.CENTER);
-        Button cashBtn = new Button("Cash Payment");
-        Button onlineBtn = new Button("Online Payment");
-        paymentButtons.getChildren().addAll(cashBtn, onlineBtn);
-
-        Button cancelBtn = new Button("Cancel");
-        cancelBtn.setPrefWidth(120);
-        VBox cancelBox = new VBox(cancelBtn);
-        cancelBox.setAlignment(Pos.BOTTOM_CENTER);
-        cancelBox.setPadding(new Insets(50,0,0,0));
-
-        VBox content = new VBox(20, cardInfoBox, paymentButtons);
-        content.setAlignment(Pos.CENTER);
-
-        root.getChildren().addAll(content, cancelBox);
+        VBox.setMargin(cancelBtn, new Insets(40,0,0,0));
 
         Scene scene = new Scene(root, 600, 500);
-        primaryStage.setScene(scene);
-        primaryStage.setTitle("DMRC Ticket Machine");
-        primaryStage.show();
+        stage.setScene(scene);
+        stage.show();
     }
 
-    public static void createCashPaymentScreen(Stage primaryStage, String cardNumber, double currentBalance, double maxBalance){
-        Label title = new Label("Cash Recharge");
-        title.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
-
-        VBox cardBox = getVBox(cardNumber, currentBalance, maxBalance);
-
-        Label chooseLabel = new Label("Select Recharge Amount");
-        chooseLabel.setStyle("-fx-font-size: 16px;");
-
-        HBox amountBtn = new HBox(15);
-        amountBtn.setAlignment(Pos.CENTER);
-        int[] amounts = {100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000};
-
-        Label insertInstructions = new Label();
-        Button completeBtn = new Button("Complete Payment");
-        completeBtn.setVisible(false);
-
-        for (int amount : amounts) {
-            Button amtBtn = new Button("₹" + amount);
-            amtBtn.setOnAction(e -> {
-                insertInstructions.setText("Please insert ₹ " + amount + " in cash to continue...");
-                completeBtn.setUserData(amount);
-                completeBtn.setVisible(true);
-            });
-            amountBtn.getChildren().add(amtBtn);
+    public static class CashRechargeScreen{
+        public static void show(Stage stage){
+            System.out.println("Card recharge screen");
         }
-        insertInstructions.setStyle("-fx-font-size: 16px; -fx-text-fill: green;");
-
-        completeBtn.setOnAction(e -> {
-            int rechargeAmt = (int) completeBtn.getUserData();
-            double newBalance = currentBalance + rechargeAmt;
-
-            if (newBalance > maxBalance){
-                showAlert("Limit Exceeded", "You cannot exceed the ₹ " + maxBalance + " card balance.");
-            } else {
-                createRechargeSuccessScreen(primaryStage, cardNumber, currentBalance, rechargeAmt);
-            }
-        });
-
-        VBox root = new VBox(25, title, cardBox, chooseLabel, amountBtn, insertInstructions, completeBtn);
-        root.setStyle("-fx-background-color: #f2f2f2");
-        root.setPadding(new Insets(40));
-        root.setAlignment(Pos.CENTER);
-
-        Scene scene = new Scene(root, 800, 850);
-        primaryStage.setScene(scene);
     }
-
-    private static VBox getVBox(String cardNumber, double currentBalance, double maxBalance) {
-        Label cardLabel = new Label("Card number: " + cardNumber);
-        Label balanceLabel = new Label("Current balance: " + currentBalance);
-        Label maxLabel = new Label("Maximum balance: " + maxBalance);
-
-        VBox cardBox = new VBox(10, cardLabel, balanceLabel, maxLabel);
-        cardBox.setAlignment(Pos.CENTER_LEFT);
-        cardBox.setPadding(new Insets(20));
-        cardBox.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 8px; -fx-border-color: #ccc; -fx-border-radius: 8px;");
-        return cardBox;
-    }
-
-    private static void showAlert(String title, String message){
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
-    public static void createOnlinePaymentScreen(Stage primaryStage, String cardNumber, double currentBalance, double maxBalance){
-        Label title = new Label("Online Recharge");
-        title.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
-
-        Label qrInstruction = new Label("Scan the QR code to complete the payment");
-        qrInstruction.setStyle("-fx-font-size: 16px;");
-
-        Image qrImage = new Image(Objects.requireNonNull(RechargeCardScreen.class.getResource("/qr.png")).toExternalForm());
-        ImageView qrView = new ImageView(qrImage);
-        qrView.setFitWidth(200);
-        qrView.setPreserveRatio(true);
-
-        Label amountLabel = new Label("Recharge Amount: ₹500");
-        amountLabel.setStyle("-fx-font-size: 16px;");
-
-        Button confirmBtn = new Button("Paid Successfully");
-        confirmBtn.setOnAction(e -> {
-            double rechargeAmount = 500;
-            double newBalance = currentBalance + rechargeAmount;
-            if (newBalance > maxBalance){
-                showAlert("Limit Exceeded", "You cannot exceed the ₹ " + maxBalance + " card balance.");
-            } else {
-                createRechargeSuccessScreen(primaryStage, cardNumber, currentBalance, rechargeAmount);
-            }
-        });
-        VBox cardBox = getVBox(cardNumber, currentBalance, maxBalance);
-        VBox root = new VBox(25, title, cardBox, amountLabel, qrInstruction, qrView, confirmBtn);
-        root.setStyle("-fx-background-color: #f2f2f2");
-        root.setPadding(new Insets(40));
-        root.setAlignment(Pos.CENTER);
-
-        Scene scene = new Scene(root, 800, 850);
-        primaryStage.setScene(scene);
-    }
-
-    public static void createRechargeSuccessScreen(Stage primaryStage, String cardNumber, double oldBalance, double rechargeAmount){
-        Label title = new Label("Recharge Successfully");
-        title.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: green;");
-
-        VBox infoBox = getInfoBox(cardNumber, oldBalance, rechargeAmount);
-
-        HBox buttonBox = getButtonBox(primaryStage);
-
-        VBox root = new VBox(30, title, infoBox, buttonBox);
-        root.setStyle("-fx-background-color: #f4fff4;");
-        root.setAlignment(Pos.CENTER);
-        root.setPadding(new Insets(40));
-
-        Scene scene = new Scene(root, 800, 850);
-        primaryStage.setScene(scene);
-    }
-
-    private static HBox getButtonBox(Stage primaryStage) {
-        Button printReceiptBtn = new Button("Print Receipt");
-        printReceiptBtn.setOnAction(e -> {
-            showAlert("Printing...", "Receipt is being printed (simulated)");
-        });
-
-        Button homeBtn = new Button("Return to Main Screen");
-        homeBtn.setOnAction(e -> {
-            welcomeScreen welcome = new welcomeScreen();
-            Scene welcomeScene = welcome.createWelcomeScene(primaryStage);
-            primaryStage.setScene(welcomeScene);
-        });
-
-        HBox buttonBox = new HBox(20, printReceiptBtn, homeBtn);
-        buttonBox.setAlignment(Pos.CENTER);
-        return buttonBox;
-    }
-
-    private static VBox getInfoBox(String cardNumber, double oldBalance, double rechargeAmount) {
-        Label cardLabel = new Label("Card Number: " + cardNumber);
-        Label oldBalanceLabel = new Label("Previous Balance: " + oldBalance);
-        Label rechargeLabel = new Label("Recharge Amount: " + rechargeAmount);
-        Label newBalanceLabel = new Label("New Balance: " + (oldBalance + rechargeAmount));
-        newBalanceLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
-
-        VBox infoBox = new VBox(10, cardLabel, oldBalanceLabel, rechargeLabel);
-        infoBox.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 8px; -fx-border-color: #ccc; -fx-border-radius: 8px;");
-        infoBox.setAlignment(Pos.CENTER_LEFT);
-        infoBox.setPadding(new Insets(20));
-        return infoBox;
-    }
-
-    private static void showReceiptOptionScreen(Stage primaryStage, String cardNumber, double rechargeAmount, double newBalance){
-        Label title = new Label("Recharge Successful");
-        title.setFont(Font.font("Arial", FontWeight.BOLD, 24));
-        title.setTextAlignment(TextAlignment.CENTER);
-
-        Label cardLabel = new Label("Card Number: " + cardNumber);
-        Label amountLabel = new Label("Recharge Amount: " + rechargeAmount);
-        Label newBalanceLabel = new Label("New Balance: " + newBalance);
-
-        VBox detailsBox = new VBox(10, cardLabel, amountLabel, newBalanceLabel);
-        detailsBox.setAlignment(Pos.CENTER);
-
-        Label askReceipt = new Label("Would you like to print the receipt?");
-        askReceipt.setFont(Font.font("Arial", FontWeight.BOLD, 16));
-
-        Button yesBtn = new Button("Yes. Print Receipt");
-        Button noBtn = new Button("No, Go back to main screen");
-        yesBtn.setOnAction(e -> {
-            showAlert("Receipt Printed", "Thank you! Your receipt has been printed.");
-            welcomeScreen welcome = new welcomeScreen();
-            Scene welcomeScene = welcome.createWelcomeScene(primaryStage);
-            primaryStage.setScene(welcomeScene);
-        });
-        noBtn.setOnAction(e -> {
-            welcomeScreen welcome = new welcomeScreen();
-            Scene welcomeScene = welcome.createWelcomeScene(primaryStage);
-            primaryStage.setScene(welcomeScene);
-        });
-
-        HBox btnBox = new HBox(20, yesBtn, noBtn);
-        btnBox.setAlignment(Pos.CENTER);
-
-        VBox root = new VBox(20, title, detailsBox, askReceipt, btnBox);
-        root.setAlignment(Pos.CENTER);
-        root.setPadding(new Insets(30));
-
-        Scene scene = new Scene(root, 600, 400);
-        primaryStage.setScene(scene);
+    public static class OnlineRechargeScreen{
+        public static void show(Stage stage){
+            System.out.println("Online recharge screen");
+        }
     }
 }

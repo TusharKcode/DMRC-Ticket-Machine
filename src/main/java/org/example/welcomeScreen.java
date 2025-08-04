@@ -220,7 +220,7 @@ public class welcomeScreen {
             exitBtn.setText(labels.get("exit"));
         });
         //--------------------------------------------------------------------->>>>>> Button actions
-        rechargeBtn.setOnAction(e -> RechargeCardScreen.createInsertCardScreen(stage));
+        rechargeBtn.setOnAction(e -> RechargeCardScreen.show(stage));
         historyBtn.setOnAction(e -> System.out.println("History Clicked"));
         exitBtn.setOnAction(e -> stage.close());
 
