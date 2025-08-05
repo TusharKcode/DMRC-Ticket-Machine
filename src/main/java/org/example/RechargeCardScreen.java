@@ -16,10 +16,10 @@ import javafx.util.Duration;
 public class RechargeCardScreen {
     public static void show(Stage stage){
         showRechargeOptionsScreen(stage);
-        showCardDetectionScreen(stage);
+//        showCardDetectionScreen(stage);
     }
         // Step 1 -> Show "Please insert card" screen
-        private static void showCardDetectionScreen(Stage stage){
+        /*private static void showCardDetectionScreen(Stage stage){
             Label instruction = new Label("Please insert your card into the machine");
             instruction.setTextFill(Color.DARKBLUE);
             instruction.setAlignment(Pos.CENTER);
@@ -58,7 +58,7 @@ public class RechargeCardScreen {
                 }
             });
             timeOut.play();
-        }
+        }*/
     public static void showRechargeOptionsScreen(Stage stage){
         // Title
         Label title = new Label("Select Recharge Mode");
@@ -115,7 +115,49 @@ public class RechargeCardScreen {
 
     public static class CashRechargeScreen{
         public static void show(Stage stage){
-            System.out.println("Card recharge screen");
+            Label title = new Label("Select Amount to Recharge");
+            title.setFont(new Font("Arial", 24));
+            title.setTextFill(Color.DARKBLUE);
+
+            Label selectAmountLabel = new Label("Amount: ₹0");
+            selectAmountLabel.setTextFill(Color.FORESTGREEN);
+            selectAmountLabel.setFont(new Font("Arial", 20));
+
+            // Create Amount buttons
+
+            VBox grid = new VBox();
+            grid.setAlignment(Pos.CENTER);
+
+            int[] amounts = {100, 200, 300, 400, 500, 1000, 1500, 2000};
+            for (int i = 0; i < amounts.length; i += 4) {
+                HBox row = new HBox(15);
+                row.setAlignment(Pos.CENTER);
+                for(int j = i; j < i+4 && j < amounts.length; j++){
+                    int amt = amounts[j];
+                    Button btn = new Button("₹" + amt);
+                    btn.setPrefSize(100, 50);
+                    btn.setStyle("-fx-font-size: 16px;");
+                    btn.setOnAction(e -> selectAmountLabel.setText("Amount: ₹" + amt));
+                    row.getChildren().add(btn);
+                }
+                grid.getChildren().add(row);
+            }
+            // Cancel button
+            Button cancelBtn = new Button("Cancel");
+            cancelBtn.setStyle("-fx-background-color: crimson; -fx-text-fill: white;");
+            cancelBtn.setPrefWidth(120);
+            cancelBtn.setFont(new Font("Arial", 16));
+            cancelBtn.setOnAction(e -> showRechargeOptionsScreen(stage));
+
+            VBox root = new VBox(30, title, grid, selectAmountLabel, cancelBtn);
+            root.setAlignment(Pos.TOP_CENTER);
+            root.setPadding(new Insets(40));
+            root.setStyle("-fx-background-color: #f4f8ff;");
+            VBox.setMargin(cancelBtn, new Insets(30,0,0,0));
+
+            Scene scene = new Scene(root, 600, 500);
+            stage.setScene(scene);
+            stage.show();
         }
     }
     public static class OnlineRechargeScreen{
