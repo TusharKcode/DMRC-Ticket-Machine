@@ -6,12 +6,18 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+
+import javax.swing.text.Element;
+import javax.swing.text.html.ImageView;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RechargeCardScreen {
     public static void show(Stage stage){
@@ -114,6 +120,16 @@ public class RechargeCardScreen {
     }
 
     public static class CashRechargeScreen{
+
+        private static final Map<Integer, String[]> noteImg = new HashMap<>(){{
+            put(100, new String[]{"/20rsNote.jpg","/50rsNote.jpg","/100rsNote.jpg"});
+            put(200, new String[]{"/200rsNote.jpg","/100rsNote.jpg"});
+            put(500, new String[]{"/200rsNote.jpg","/100rsNote.jpg"});
+            put(1000, new String[]{"/200rsNote.jpg","/500rsNote.jpg"});
+            put(1500, new String[]{"/500rsNote.jpg"});
+            put(2000, new String[]{"/500rsNote.jpg"});
+        }};
+
         public static void show(Stage stage){
             Label title = new Label("Select Amount to Recharge");
             title.setFont(new Font("Arial", 24));
@@ -123,21 +139,39 @@ public class RechargeCardScreen {
             selectAmountLabel.setTextFill(Color.FORESTGREEN);
             selectAmountLabel.setFont(new Font("Arial", 20));
 
-            // Create Amount buttons
+            VBox noteImgBox = new VBox();
+            noteImgBox.setAlignment(Pos.CENTER);
+            noteImgBox.setSpacing(10);
 
+            VBox cardInfoBox = new VBox(selectAmountLabel, noteImgBox);
+            cardInfoBox.setStyle("-fx-border-color: gray; -fx-border-width: 2; -fx-padding: 15;");
+            cardInfoBox.setAlignment(Pos.CENTER);
+
+            // Create Amount buttons
             VBox grid = new VBox();
             grid.setAlignment(Pos.CENTER);
 
             int[] amounts = {100, 200, 300, 400, 500, 1000, 1500, 2000};
             for (int i = 0; i < amounts.length; i += 4) {
-                HBox row = new HBox(15);
+                HBox row = new HBox(20);
                 row.setAlignment(Pos.CENTER);
                 for(int j = i; j < i+4 && j < amounts.length; j++){
                     int amt = amounts[j];
                     Button btn = new Button("₹" + amt);
                     btn.setPrefSize(100, 50);
                     btn.setStyle("-fx-font-size: 16px;");
-                    btn.setOnAction(e -> selectAmountLabel.setText("Amount: ₹" + amt));
+                    btn.setOnAction(e -> {
+                        selectAmountLabel.setText("Amount: ₹" + amt);
+                        noteImgBox.getChildren().clear();
+                        if(noteImgBox.containsKey(amt)){
+                            for(String imgFile : noteImg.get(amt)){
+                                ImageView imgView = new ImageView(new Image(imgFile));
+                                imgView.setFitHeight(40);
+                                imgView.setPreserveRatio(true);
+                                noteImgBox.getChildren().add(imgView);
+                            }
+                        }
+                    });
                     row.getChildren().add(btn);
                 }
                 grid.getChildren().add(row);
@@ -149,13 +183,13 @@ public class RechargeCardScreen {
             cancelBtn.setFont(new Font("Arial", 16));
             cancelBtn.setOnAction(e -> showRechargeOptionsScreen(stage));
 
-            VBox root = new VBox(30, title, grid, selectAmountLabel, cancelBtn);
+            VBox root = new VBox(25, title, grid, selectAmountLabel, cancelBtn);
             root.setAlignment(Pos.TOP_CENTER);
-            root.setPadding(new Insets(40));
+            root.setPadding(new Insets(30));
             root.setStyle("-fx-background-color: #f4f8ff;");
             VBox.setMargin(cancelBtn, new Insets(30,0,0,0));
 
-            Scene scene = new Scene(root, 600, 500);
+            Scene scene = new Scene(root, 600, 550);
             stage.setScene(scene);
             stage.show();
         }
