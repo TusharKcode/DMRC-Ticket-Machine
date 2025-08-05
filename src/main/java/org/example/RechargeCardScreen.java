@@ -15,52 +15,51 @@ import javafx.util.Duration;
 
 public class RechargeCardScreen {
     public static void show(Stage stage){
+        showRechargeOptionsScreen(stage);
         showCardDetectionScreen(stage);
     }
+        // Step 1 -> Show "Please insert card" screen
+        private static void showCardDetectionScreen(Stage stage){
+            Label instruction = new Label("Please insert your card into the machine");
+            instruction.setTextFill(Color.DARKBLUE);
+            instruction.setAlignment(Pos.CENTER);
+            instruction.setFont(new Font("Arial", 22));
+            instruction.setWrapText(true);
 
-    // Step 1 -> Show "Please insert card" screen
-    private static void showCardDetectionScreen(Stage stage){
-        Label instruction = new Label("Please insert your card into the machine");
-        instruction.setTextFill(Color.DARKBLUE);
-        instruction.setAlignment(Pos.CENTER);
-        instruction.setFont(new Font("Arial", 22));
-        instruction.setWrapText(true);
+            VBox root = new VBox(instruction);
+            root.setAlignment(Pos.CENTER);
+            root.setPadding(new Insets(50));
+            root.setStyle("-fx-background-color: #eef4fa;");
 
-        VBox root = new VBox(instruction);
-        root.setAlignment(Pos.CENTER);
-        root.setPadding(new Insets(50));
-        root.setStyle("-fx-background-color: #eef4fa;");
+            Scene detectionScene = new Scene(root,600,500);
+            stage.setScene(detectionScene);
+            stage.show();
 
-        Scene detectionScene = new Scene(root,600,500);
-        stage.setScene(detectionScene);
-        stage.show();
+            // Simulate card detection after 5 seconds
+            PauseTransition waitForDetection = new PauseTransition(Duration.seconds(5));
+            waitForDetection.setOnFinished(event -> {
+                boolean cardDetected = true;  // simulate detection
 
-        // Simulate card detection after 5 seconds
-        PauseTransition waitForDetection = new PauseTransition(Duration.seconds(5));
-        waitForDetection.setOnFinished(event -> {
-            boolean cardDetected = true;  // simulate detection
+                if(cardDetected){
+                    showRechargeOptionsScreen(stage);
+                }
+            });
+            waitForDetection.play();
 
-            if(cardDetected){
-                showRechargeOptionsScreen(stage);
-            }
-        });
-        waitForDetection.play();
+            // Timeout if card not detected within 5 seconds
+            PauseTransition timeOut = new PauseTransition(Duration.seconds(5));
+            timeOut.setOnFinished(event -> {
+                boolean cardDetected = false; // assumes not detected
 
-        // Timeout if card not detected within 5 seconds
-        PauseTransition timeOut = new PauseTransition(Duration.seconds(5));
-        timeOut.setOnFinished(event -> {
-            boolean cardDetected = false; // assumes not detected
-
-            if(!cardDetected){
-                welcomeScreen welcome = new welcomeScreen();
-                Scene welcomeScene = welcome.createWelcomeScene(stage);
-                stage.setScene(welcomeScene);
-            }
-        });
-        timeOut.play();
-    }
-
-    private static void showRechargeOptionsScreen(Stage stage){
+                if(!cardDetected){
+                    welcomeScreen welcome = new welcomeScreen();
+                    Scene welcomeScene = welcome.createWelcomeScene(stage);
+                    stage.setScene(welcomeScene);
+                }
+            });
+            timeOut.play();
+        }
+    public static void showRechargeOptionsScreen(Stage stage){
         // Title
         Label title = new Label("Select Recharge Mode");
         title.setFont(new Font("Arial", 28));
