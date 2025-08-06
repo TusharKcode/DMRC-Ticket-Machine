@@ -15,9 +15,10 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import javax.swing.text.Element;
-import javax.swing.text.html.ImageView;
+import javafx.scene.image.ImageView;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class RechargeCardScreen {
     public static void show(Stage stage){
@@ -73,20 +74,7 @@ public class RechargeCardScreen {
         title.setAlignment(Pos.CENTER);
 
         // Buttons
-        Button cashBtn = new Button("Cash");
-        cashBtn.setStyle("-fx-font-size: 18px");
-        cashBtn.setPrefSize(150, 60);
-
-        Button onlineBtn = new Button("Online");
-        onlineBtn.setStyle("-fx-font-size: 18px");
-        onlineBtn.setPrefSize(150, 60);
-
-        // Buttons Action
-        cashBtn.setOnAction(e -> CashRechargeScreen.show(stage));
-        onlineBtn.setOnAction(e -> OnlineRechargeScreen.show(stage));
-
-        HBox rechargeOptions = new HBox(30, cashBtn, onlineBtn);
-        rechargeOptions.setAlignment(Pos.CENTER);
+        HBox rechargeOptions = getRechargeOptions(stage);
 
         // Card Box info
         Label cardInfo = new Label("Card Number: 1234567\nCurrent Balance: ₹250\nMax Balance: ₹2000");
@@ -117,6 +105,24 @@ public class RechargeCardScreen {
         Scene scene = new Scene(root, 600, 500);
         stage.setScene(scene);
         stage.show();
+    }
+
+    private static HBox getRechargeOptions(Stage stage) {
+        Button cashBtn = new Button("Cash");
+        cashBtn.setStyle("-fx-font-size: 18px");
+        cashBtn.setPrefSize(150, 60);
+
+        Button onlineBtn = new Button("Online");
+        onlineBtn.setStyle("-fx-font-size: 18px");
+        onlineBtn.setPrefSize(150, 60);
+
+        // Buttons Action
+        cashBtn.setOnAction(e -> CashRechargeScreen.show(stage));
+        onlineBtn.setOnAction(e -> OnlineRechargeScreen.show(stage));
+
+        HBox rechargeOptions = new HBox(30, cashBtn, onlineBtn);
+        rechargeOptions.setAlignment(Pos.CENTER);
+        return rechargeOptions;
     }
 
     public static class CashRechargeScreen{
@@ -157,21 +163,7 @@ public class RechargeCardScreen {
                 row.setAlignment(Pos.CENTER);
                 for(int j = i; j < i+4 && j < amounts.length; j++){
                     int amt = amounts[j];
-                    Button btn = new Button("₹" + amt);
-                    btn.setPrefSize(100, 50);
-                    btn.setStyle("-fx-font-size: 16px;");
-                    btn.setOnAction(e -> {
-                        selectAmountLabel.setText("Amount: ₹" + amt);
-                        noteImgBox.getChildren().clear();
-                        if(noteImgBox.containsKey(amt)){
-                            for(String imgFile : noteImg.get(amt)){
-                                ImageView imgView = new ImageView(new Image(imgFile));
-                                imgView.setFitHeight(40);
-                                imgView.setPreserveRatio(true);
-                                noteImgBox.getChildren().add(imgView);
-                            }
-                        }
-                    });
+                    Button btn = getButton(amt, selectAmountLabel, noteImgBox);
                     row.getChildren().add(btn);
                 }
                 grid.getChildren().add(row);
@@ -192,6 +184,26 @@ public class RechargeCardScreen {
             Scene scene = new Scene(root, 600, 550);
             stage.setScene(scene);
             stage.show();
+        }
+
+        private static Button getButton(int amt, Label selectAmountLabel, VBox noteImgBox) {
+            Button btn = new Button("₹" + amt);
+            btn.setPrefSize(100, 50);
+            btn.setStyle("-fx-font-size: 16px;");
+            btn.setOnAction(e -> {
+                selectAmountLabel.setText("Amount: ₹" + amt);
+                noteImgBox.getChildren().clear();
+                if(noteImg.containsKey(amt)){
+                    for(String imgFile : noteImg.get(amt)){
+                        Image image = new Image(RechargeCardScreen.class.getResourceAsStream("/currencyImg" + imgFile));
+                        ImageView imgView = new ImageView(image);
+                        imgView.setFitHeight(40);
+                        imgView.setPreserveRatio(true);
+                        noteImgBox.getChildren().add(imgView);
+                    }
+                }
+            });
+            return btn;
         }
     }
     public static class OnlineRechargeScreen{
